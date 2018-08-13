@@ -1,0 +1,15 @@
+TODO:
+
+[x] func(path): load png emoji from disk
+[x] func(path): load background image from disk
+[x] func(img, m): chop image into m x m squares and return in list of lists
+[x] func(img): return closest image from candidate set by euclidian
+[x] func(img, h, w) resize image
+[x] scrape popular emojis
+[ ] func(img) -> dominant RGB color
+
+Ideas:
+
+1) Could try replacing transparent areas of emoji patch-in with dominant color from that BG patch
+2) Limit emojis to just the popular ones - will require a manual run through... (or scrape of that page earlier?)
+3) faiss / annoy installation for faster generation
