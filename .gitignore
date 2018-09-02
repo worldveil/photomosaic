@@ -1,3 +1,5 @@
 *.pyc
 .DS_Store
 images/
+.pytest_cache/
+emosiac/tests/output/*
