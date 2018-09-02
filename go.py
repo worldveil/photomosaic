@@ -4,7 +4,7 @@ import os
 import glob
 
 import cv2
-import sagemaker
+# import sagemaker
 import boto3
 import numpy as np
 from scipy.spatial.distance import pdist, squareform

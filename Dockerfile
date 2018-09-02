@@ -19,7 +19,7 @@ RUN apt-get update && \
         libavformat-dev \
         libpq-dev
 
-RUN pip install numpy pytest ipython[notebook] scipy bs4 sklearn boto3 requests
+RUN pip install numpy pytest ipython[notebook] scipy bs4 sklearn boto3 requests matplotlib
 
 WORKDIR /
 ENV OPENCV_VERSION="3.4.2"

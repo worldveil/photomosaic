@@ -1,8 +1,12 @@
+export CONTAINER_NAME=emoji_test
+
 docker run  \
 	--rm \
-	--name emoji_test \
+	--name $CONTAINER_NAME \
 	--mount type=bind,source="$(pwd)",target=/project \
-	-it emoji:latest /bin/bash
+	-p 8888:8888/tcp \
+	-it emoji:latest \
+	jupyter notebook --allow-root --ip 0.0.0.0 --no-browser
 
 # docker run \
 # 	--rm \
