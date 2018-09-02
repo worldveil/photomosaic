@@ -5,8 +5,13 @@ docker run  \
 	--name $CONTAINER_NAME \
 	--mount type=bind,source="$(pwd)",target=/project \
 	-p 8888:8888/tcp \
-	-it emoji:latest \
-	jupyter notebook --allow-root --ip 0.0.0.0 --no-browser
+	emoji:latest \
+	jupyter notebook \
+		--allow-root \
+		--ip 0.0.0.0 \
+		--no-browser \
+		--NotebookApp.token='' \
+		--notebook-dir=/project
 
 # docker run \
 # 	--rm \
