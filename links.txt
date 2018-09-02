@@ -1,0 +1,3 @@
+https://www.youtube.com/watch?v=BtUkUp0JtI4
+https://github.com/facebookresearch/faiss/blob/master/INSTALL.md
+https://github.com/manifoldai/docker-cookiecutter-data-science (some good docker tricks)
