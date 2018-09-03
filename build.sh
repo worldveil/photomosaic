@@ -1,1 +1,1 @@
-docker build -t emoji .
+docker build -t emoji-conda -f Dockerfile .

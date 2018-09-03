@@ -13,3 +13,15 @@ Ideas:
 1) Could try replacing transparent areas of emoji patch-in with dominant color from that BG patch
 2) Limit emojis to just the popular ones - will require a manual run through... (or scrape of that page earlier?)
 3) faiss / annoy installation for faster generation
+
+
+====
+
+popular emojis are 640 x 640 x 3
+downsample them by 1 / 64 (factor = 0.015625)
+	gives us emojis of 10 x 10 x 3
+	this will give us dimensionality of n * n * 3 = 300
+for each patch in image
+	downsample to 10 x 10 x 3
+find most similar emoji image with query
+replace patch of image with emoji

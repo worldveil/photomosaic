@@ -3,3 +3,4 @@
 images/
 .pytest_cache/
 emosiac/tests/output/*
+.ipynb_checkpoints/

@@ -1,7 +1,25 @@
-# https://github.com/janza/docker-python3-opencv/blob/master/Dockerfile
-FROM python:3.7
+# https://github.com/plippe/faiss-docker/blob/master/Dockerfile
+FROM nvidia/cuda:8.0-devel-ubuntu16.04
 
-RUN apt-get update && \
+ENV FAISS_CPU_OR_GPU "cpu"
+ENV FAISS_VERSION "1.3.0"
+ENV OPENCV_VERSION "3.4.1"
+
+RUN apt-get update && apt-get install -y curl bzip2 libgl1-mesa-glx
+
+RUN curl https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh > /tmp/conda.sh
+RUN bash /tmp/conda.sh -b -p /opt/conda && \
+    /opt/conda/bin/conda update -n base conda && \
+    /opt/conda/bin/conda install -y -c pytorch faiss-${FAISS_CPU_OR_GPU}=${FAISS_VERSION} && \
+    apt-get remove -y --auto-remove curl bzip2 && \
+    apt-get clean && \
+    rm -fr /tmp/conda.sh
+
+RUN /opt/conda/bin/conda install -y -c conda-forge opencv=$OPENCV_VERSION
+
+ENV PATH="/opt/conda/bin:${PATH}"
+
+RUN apt-get update -y && \
         apt-get install -y \
         build-essential \
         cmake \
@@ -17,33 +35,13 @@ RUN apt-get update && \
         libpng-dev \
         libtiff-dev \
         libavformat-dev \
-        libpq-dev
+        libpq-dev \
+        libopenblas-dev \
+        liblapack3 \
+        python-dev \
+        swig \
+        git \
+        python-pip \
+        tree
 
-RUN pip install numpy pytest ipython[notebook] scipy bs4 sklearn boto3 requests matplotlib ipdb
-
-WORKDIR /
-ENV OPENCV_VERSION="3.4.2"
-RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
-&& unzip ${OPENCV_VERSION}.zip \
-&& mkdir /opencv-${OPENCV_VERSION}/cmake_binary \
-&& cd /opencv-${OPENCV_VERSION}/cmake_binary \
-&& cmake -DBUILD_TIFF=ON \
-  -DBUILD_opencv_java=OFF \
-  -DWITH_CUDA=OFF \
-  -DWITH_OPENGL=ON \
-  -DWITH_OPENCL=ON \
-  -DWITH_IPP=ON \
-  -DWITH_TBB=ON \
-  -DWITH_EIGEN=ON \
-  -DWITH_V4L=ON \
-  -DBUILD_TESTS=OFF \
-  -DBUILD_PERF_TESTS=OFF \
-  -DCMAKE_BUILD_TYPE=RELEASE \
-  -DCMAKE_INSTALL_PREFIX=$(python3.7 -c "import sys; print(sys.prefix)") \
-  -DPYTHON_EXECUTABLE=$(which python3.7) \
-  -DPYTHON_INCLUDE_DIR=$(python3.7 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
-  -DPYTHON_PACKAGES_PATH=$(python3.7 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") \
-  .. \
-&& make install \
-&& rm /${OPENCV_VERSION}.zip \
-&& rm -r /opencv-${OPENCV_VERSION}
+RUN pip install numpy pytest ipython[notebook]==5.8.0 scipy bs4 sklearn boto3 requests matplotlib cython ipdb

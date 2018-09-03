@@ -1,7 +1,0 @@
-bs4
-numpy
-scipy
-sklearn
-boto3
-sagemaker
-scipy
