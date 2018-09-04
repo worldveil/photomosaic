@@ -60,3 +60,30 @@ def hsv_to_bgr(img):
 
 def resize_square_image(img, factor, interpolation=cv2.INTER_AREA):
   return cv2.resize(img, None, fx=factor, fy=factor, interpolation=interpolation)
+
+def make_image_with_noise_background(img_with_alpha):
+  """
+  Returns image with background filled with random noise
+  dtype of return image is a float64
+  """
+  # https://docs.opencv.org/3.4.2/d0/d86/tutorial_py_image_arithmetics.html
+  img = np.copy(img_with_alpha)
+
+  # load image and isolate mask
+  bgr_img = img[:, :, :3]
+  alpha = img[:, :, 3]
+  _, img_mask = cv2.threshold(alpha, 10, 255, cv2.THRESH_BINARY)
+  not_img_mask = cv2.bitwise_not(img_mask)
+
+  # create a noise image
+  noise = np.zeros((bgr_img.shape[0], bgr_img.shape[1], 3))
+  noise[:, :, 0] = np.random.random(alpha.shape).astype(np.float32)
+  noise[:, :, 1] = np.random.random(alpha.shape).astype(np.float32)
+  noise[:, :, 2] = np.random.random(alpha.shape).astype(np.float32)
+
+  # apply mask
+  noise_bg = cv2.bitwise_and(noise, noise, mask=not_img_mask)
+  img_fg = cv2.bitwise_and(bgr_img, bgr_img, mask=img_mask) / 255.
+  img_with_noise = cv2.add(noise_bg, img_fg).astype(np.float32)
+
+  return img_with_noise

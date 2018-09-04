@@ -2,3 +2,7 @@ https://www.youtube.com/watch?v=BtUkUp0JtI4
 https://github.com/facebookresearch/faiss/blob/master/INSTALL.md
 https://github.com/manifoldai/docker-cookiecutter-data-science (some good docker tricks)
 https://github.com/facebookresearch/faiss/blob/master/Dockerfile
+
+# comparing images
+http://web.mit.edu/sinhalab/Papers/sinha_russell2011.pdf
+
