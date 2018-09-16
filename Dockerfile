@@ -44,4 +44,5 @@ RUN apt-get update -y && \
         python-pip \
         tree
 
-RUN pip install numpy pytest ipython[notebook]==5.8.0 scipy bs4 sklearn boto3 requests matplotlib cython ipdb
+RUN pip install numpy pytest ipython[notebook]==5.8.0 scipy bs4 sklearn boto3 \
+                requests matplotlib cython ipdb scikit-image

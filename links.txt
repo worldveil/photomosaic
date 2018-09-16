@@ -6,3 +6,10 @@ https://github.com/facebookresearch/faiss/blob/master/Dockerfile
 # comparing images
 http://web.mit.edu/sinhalab/Papers/sinha_russell2011.pdf
 
+# jigsaw image mosiacs
+http://pellacini.di.uniroma1.it/publications/jim02/jim02-paper.pdf
+
+# THIS IS DOPE
+https://www.youtube.com/watch?v=vQk_Sfl7kSc
+https://arxiv.org/abs/1604.08610
+

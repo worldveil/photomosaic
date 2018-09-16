@@ -1,6 +1,7 @@
 import numpy as np
 
 import cv2
+import faiss
 
 
 def divide_image(img, pixels):
@@ -87,3 +88,55 @@ def make_image_with_noise_background(img_with_alpha):
   img_with_noise = cv2.add(noise_bg, img_fg).astype(np.float32)
 
   return img_with_noise
+
+def to_vector(img, factor=0.1):
+  """
+  (640 x 640 x 3) => (64 x 64 x 3) => (64*64*3, 1)
+  """
+  resized = resize_square_image(img, factor=factor)
+  return resized.reshape((-1,)) / 255.0
+
+def index_images(paths, vectorization_downsize_factor=0.1, resize_downsize_factor=1):
+  """
+  @return: valid_image_paths
+  @return: valid_images
+  @return: index
+  """
+  dimensions = int(640 * 640 * 3 * vectorization_downsize_factor ** 2)
+  index = faiss.IndexFlatL2(dimensions)
+  
+  vectors = []
+  valid_image_paths = []
+  images = []
+  
+  for p in paths:
+    # load image, validate
+    img = cv2.imread(p, cv2.IMREAD_UNCHANGED)
+    if img.shape != (640, 640, 4):
+      continue
+    
+    # add random noise & downsize if needed
+    img_with_noise = make_image_with_noise_background(img)[:, :, [2, 1, 0]]
+    resized = resize_square_image(img_with_noise, factor=resize_downsize_factor)
+    images.append(resized)
+    
+    # vectorize
+    v = to_vector(img_with_noise, factor=vectorization_downsize_factor)
+    vectors.append(v)
+    valid_image_paths.append(p)
+      
+  # now combine into matrix
+  n = len(vectors)
+  matrix = np.zeros((n, dimensions), dtype=np.float32)
+  for i, v in enumerate(vectors):
+    matrix[i, :] = v
+      
+  # display the matrix as an image
+  #plt.imshow(matrix)
+  #plt.savefig('vectors.png', dpi=1024)
+      
+  # index our images
+  index.add(matrix)
+  
+  # return needed data
+  return valid_image_paths, images, index
