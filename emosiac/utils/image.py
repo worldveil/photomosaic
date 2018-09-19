@@ -3,6 +3,30 @@ import numpy as np
 import cv2
 import faiss
 
+from emosiac.image import Image
+
+
+def load_and_vectorize_image(args):
+  """
+  @args: (path, h, w, c, aspect_ratio)
+      path (String) to load image from
+      h (int) height
+      w (int) width
+      c (int) number of channels
+      aspect_ratio (float) that is allowed (height / width)
+      
+  @return: tuple (Image object, numpy arr of vectorized image), but
+      returns (None, None) if the aspect ratio of the image doesn't match 
+      the argument aspect_ratio given
+  """
+  path, h, w, c, aspect_ratio = args
+  image = Image(path)
+  img = image.compute_statistics()
+  if image.aspect_ratio == aspect_ratio:
+    v = to_vector(img, h, w, c)
+    return image, v
+  else:
+    return None, None
 
 def divide_image(img, pixels):
   """
@@ -26,6 +50,30 @@ def divide_image(img, pixels):
       box_starts.append((x, y))
       
   return box_starts
+
+def divide_image_rectangularly(img, h_pixels, w_pixels):
+  """
+  img: numpy ndarray (3D, where 3rd channel is channel)
+  h_pixels: int, number of pixels for height 
+  w_pixels: int, number of pixels for width 
+  """
+  h, w, _ = img.shape
+
+  num_height_boxes = int(h / h_pixels)
+  num_width_boxes = int(w / w_pixels)
+
+  height_offset = int((h % h_pixels) / 2)
+  width_offset = int((w % w_pixels) / 2)
+
+  x_starts = [x*h_pixels + height_offset  for x in range(num_height_boxes) ]
+  y_starts = [y*w_pixels + width_offset   for y in range(num_width_boxes)]
+
+  rect_starts = []
+  for i, x in enumerate(x_starts):
+    for j, y in enumerate(y_starts):
+      rect_starts.append((x, y))
+
+  return rect_starts
 
 def load_png_image(path):
   # IMREAD_UNCHANGED is to keep the alpha channel
@@ -89,12 +137,22 @@ def make_image_with_noise_background(img_with_alpha):
 
   return img_with_noise
 
-def to_vector(img, factor=0.1):
+def to_vector(img, h, w, c):
   """
-  (640 x 640 x 3) => (64 x 64 x 3) => (64*64*3, 1)
+  @param: img (numpy arr), image to vectorize
+  @param: h (int), desired height to resize to
+  @param: w (int), desired width to resize to
+  @param: number of channels on this image
+  
+  @return: np.float32 array of shape: (-1, h * w * c)
   """
-  resized = resize_square_image(img, factor=factor)
-  return resized.reshape((-1,)) / 255.0
+  img_h, img_w, _ = img.shape
+  resized = cv2.resize(
+    img, None,
+    fx=h / float(img_h),
+    fy=w / float(img_w),
+    interpolation=cv2.INTER_AREA)
+  return resized.reshape(-1, h * w * c).astype(np.float32)
 
 def index_images(paths, vectorization_downsize_factor=0.1, resize_downsize_factor=1):
   """

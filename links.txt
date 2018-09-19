@@ -6,6 +6,9 @@ https://github.com/facebookresearch/faiss/blob/master/Dockerfile
 # comparing images
 http://web.mit.edu/sinhalab/Papers/sinha_russell2011.pdf
 
+# EMD paper
+https://www.cs.cmu.edu/~efros/courses/LBMV07/Papers/rubner-jcviu-00.pdf
+
 # jigsaw image mosiacs
 http://pellacini.di.uniroma1.it/publications/jim02/jim02-paper.pdf
 

@@ -1,27 +1,7 @@
 TODO:
 
-[x] func(path): load png emoji from disk
-[x] func(path): load background image from disk
-[x] func(img, m): chop image into m x m squares and return in list of lists
-[x] func(img): return closest image from candidate set by euclidian
-[x] func(img, h, w) resize image
-[x] scrape popular emojis
-[ ] func(img) -> dominant RGB color
+[ ] Convert notebook into script that is runnable with args for scale, folder, background
+[ ] Profile the script
+[ ] Count number of CPUs, split copies into memory with N processes and see, does performance go up by N times?
+[ ] Think of other ways to go faster...GPU? c++? pypy? cPython? 
 
-Ideas:
-
-1) Could try replacing transparent areas of emoji patch-in with dominant color from that BG patch
-2) Limit emojis to just the popular ones - will require a manual run through... (or scrape of that page earlier?)
-3) faiss / annoy installation for faster generation
-
-
-====
-
-popular emojis are 640 x 640 x 3
-downsample them by 1 / 64 (factor = 0.015625)
-	gives us emojis of 10 x 10 x 3
-	this will give us dimensionality of n * n * 3 = 300
-for each patch in image
-	downsample to 10 x 10 x 3
-find most similar emoji image with query
-replace patch of image with emoji

@@ -25,9 +25,6 @@ class Image(object):
         self.num_dominant_colors = num_dominant_colors
         self.compute_dominant_colors = compute_dominant_colors
         
-        # compute image statistcs for later
-        self.compute_statistics()
-        
         # load EXIF data
         self.extract_exif_tags()
         
@@ -128,3 +125,6 @@ class Image(object):
         # compute dominant colors (a little computationally expensive)
         if self.compute_dominant_colors:
             self.compute_dominant_colors(img)
+
+        return img
+
