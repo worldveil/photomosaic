@@ -18,16 +18,11 @@ Example usage:
         --width-aspect 3 
 """
 parser = argparse.ArgumentParser()
-
-# required
 parser.add_argument("--codebook-dir", dest='codebook_dir', type=str, required=True, help="Source folder of images")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Video to mosaicify")
 parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
-
-# optional
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
-
 args = parser.parse_args()
 
 # sizing for mosaic tiles
@@ -63,7 +58,6 @@ while cap.isOpened():
         break
 
     starttime = time.time()
-
     ret, frame = cap.read()
 
     # encode image using codebook
