@@ -1,10 +1,6 @@
 import os
-import glob
-import time
-import random
 import argparse
 
-import faiss
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -56,8 +52,7 @@ tile_index, _, tile_images = index_images(
     aspect_ratio=aspect_ratio, 
     height=height,
     width=width,
-    vectorization_scaling_factor=args.vectorization_factor,
-    index_class=faiss.IndexFlatL2
+    vectorization_scaling_factor=args.vectorization_factor
 )
 
 # transform!
@@ -73,5 +68,6 @@ except:
 
 # save to disk
 filename = os.path.basename(args.target)
-cv2.imwrite('images/output/mosaic-%s-scale-%03d.jpg' % (filename, args.scale), mosaic.astype(np.uint8))
+savepath = 'images/output/mosaic-%s-scale-%03d.jpg' % (filename, args.scale)
+cv2.imwrite(savepath, mosaic.astype(np.uint8))
 
