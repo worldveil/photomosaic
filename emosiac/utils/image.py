@@ -137,7 +137,7 @@ def make_image_with_noise_background(img_with_alpha):
 
   return img_with_noise
 
-def to_vector(img, h, w, c):
+def to_vector(img, h, w, c=3):
   """
   @param: img (numpy arr), image to vectorize
   @param: h (int), desired height to resize to

@@ -1,6 +1,7 @@
 import glob
 import time
 import random
+import traceback
 from datetime import datetime
 import matplotlib.pyplot as plt
 
@@ -29,20 +30,23 @@ class Image(object):
         self.extract_exif_tags()
         
     def extract_exif_tags(self):
-        # use Pillow to extract the EXIF (opencv doesn't handle this)
-        img = pillow.open(self.path)
-        self.exif = img._getexif()
-        
-        # get taken at 
-        if self.exif:
-            taken_at_string = self.exif.get(36867, None)
-            self.taken_at, self.taken_at_unix = None, None
-            if taken_at_string is not None:
-                self.taken_at = datetime.strptime(taken_at_string, "%Y:%m:%d %H:%M:%S")
-                self.taken_at_unix = int(time.mktime(self.taken_at.timetuple()))
+        try:
+            # use Pillow to extract the EXIF (opencv doesn't handle this)
+            img = pillow.open(self.path)
+            self.exif = img._getexif()
+            
+            # get taken at 
+            if self.exif:
+                taken_at_string = self.exif.get(36867, None)
+                self.taken_at, self.taken_at_unix = None, None
+                if taken_at_string is not None:
+                    self.taken_at = datetime.strptime(taken_at_string, "%Y:%m:%d %H:%M:%S")
+                    self.taken_at_unix = int(time.mktime(self.taken_at.timetuple()))
 
-            # get latitude/longitude
-            self.lat, self.lon = get_exif_lat_lon(self.exif)
+                # get latitude/longitude
+                self.lat, self.lon = get_exif_lat_lon(self.exif)
+        except Exception:
+            pass
         
     def load_image(self):
         return cv2.imread(self.path)  #, cv2.COLOR_BGR2Lab)

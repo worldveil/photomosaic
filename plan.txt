@@ -1,6 +1,6 @@
 TODO:
 
-[ ] Convert notebook into script that is runnable with args for scale, folder, background
+[ ] Get working for video in not-real time
 [ ] Profile the script
 [ ] Count number of CPUs, split copies into memory with N processes and see, does performance go up by N times?
 [ ] Think of other ways to go faster...GPU? c++? pypy? cPython? 
