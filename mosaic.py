@@ -35,6 +35,7 @@ parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=
 
 # parser.add_argument('--feature', dest='feature', action='store_true')
 args = parser.parse_args()
+
 print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d" % (
     args.codebook_dir, args.target, args.scale, args.height_aspect / args.width_aspect, 
     args.vectorization_factor))
