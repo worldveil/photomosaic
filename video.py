@@ -1,5 +1,6 @@
 import time
 import argparse
+import os
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ import cv2
 
 from emosiac.utils.indexing import index_images
 from emosiac import mosiacify
+from emosiac.utils.video import extract_audio, add_audio_to_video
 
 """
 Example usage:
@@ -14,16 +16,36 @@ Example usage:
     $ ipython -i video.py -- \
         --codebook-dir images/pics/ \
         --target "images/vids/fireworks.mp4" \
-        --scale 12 \
+        --scale 14 \
         --height-aspect 4 \
-        --width-aspect 3 
+        --width-aspect 3 \
+        --savepath "images/vids/fireworks-%d.avi"
+
+Or from within ipython:
+
+    In [1]: run video.py \
+        --codebook-dir images/pics/ \
+        --target "images/vids/fireworks.mp4" \
+        --scale 8 \
+        --height-aspect 4 \
+        --width-aspect 3 \
+        --savepath "images/vids/fireworks-%d.avi"
 """
 parser = argparse.ArgumentParser()
+
+# required
 parser.add_argument("--codebook-dir", dest='codebook_dir', type=str, required=True, help="Source folder of images")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Video to mosaicify")
 parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
+parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Final name for the video, will add scale in name for %%d")
+
+# optional / has default
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
+parser.add_argument("--fps", dest='fps', type=float, default=30.0, help="Frames per second to render") 
+parser.add_argument("--seconds", dest='seconds', type=float, default=-1, help="Only mosaic N seconds from start of video") 
+
+
 args = parser.parse_args()
 
 # sizing for mosaic tiles
@@ -41,12 +63,13 @@ tile_index, _, tile_images = index_images(
 
 # create our video writer
 print("Creating video reader & writer...")
-fps = 30.0
 write_shape = (720, 1280)
 fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+mosaic_video_savepath = args.savepath % args.scale
+video_only_mosaic_video_savepath = '/tmp/%s' % os.path.basename(mosaic_video_savepath)
 out = cv2.VideoWriter(
-    'video-scale-%d.avi' % args.scale, 
-    fourcc, fps, write_shape)
+    video_only_mosaic_video_savepath, 
+    fourcc, args.fps, write_shape)
 
 # our video reader
 cap = cv2.VideoCapture(args.target)
@@ -55,15 +78,15 @@ cap = cv2.VideoCapture(args.target)
 print("Starting encoding process...")
 timings = []
 frame_count = 0
-seconds = 20
-frames = []
 
 while cap.isOpened():
-    if frame_count > int(fps * seconds):
-        # stop after N seconds
-        print("Done! Reached enough frames.")
-        break
+    # early stopping option
+    if args.seconds > 0:
+        if frame_count > int(args.fps * args.seconds):
+            print("Done! Reached enough frames.")
+            break
 
+    # grab our new frame, check that it worked
     starttime = time.time()
     ret, frame = cap.read()
     if not ret:
@@ -76,9 +99,9 @@ while cap.isOpened():
         use_stabilization=True,
         stabilization_threshold=0.9)
 
+    # write to video file on disk
     try:
         to_write = mosaic.astype(np.uint8)
-        frames.append(to_write)
         out.write(to_write)
     except Exception as e:
         print(e)
@@ -88,7 +111,7 @@ while cap.isOpened():
     elapsed = time.time() - starttime
     timings.append(elapsed)
     frame_count += 1
-    if frame_count % fps == 0:
+    if frame_count % args.fps == 0:
         print("Encoded frame %d!" % frame_count)
 
 # print("Done! Releasing resources...")
@@ -101,3 +124,21 @@ timings_arr = np.array(timings)
 mean = timings_arr.mean()
 stddev = timings_arr.std()
 print("Mean: %.5f +/- %.5f" % (mean, stddev))
+
+# extract audio from original video 
+dst_audiopath = '/tmp/%d-audio-extract' % args.scale
+success = extract_audio(
+    src_videopath=args.target, 
+    dst_audiopath=dst_audiopath)
+if not success:
+    print("Error extracting original audio!")
+
+# put original audio into new video
+add_audio_to_video(
+    dst_savepath=mosaic_video_savepath, 
+    src_audiopath=dst_audiopath, 
+    src_videopath=video_only_mosaic_video_savepath)
+
+# clean up files
+os.remove(dst_audiopath)
+os.remove(video_only_mosaic_video_savepath)
