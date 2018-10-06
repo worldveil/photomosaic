@@ -4,12 +4,24 @@ import numpy as np
 from emosiac.utils.image import divide_image_rectangularly, to_vector
 
 
-def mosiacify(target_image, tile_h, tile_w, tile_index, tile_images):
+def mosiacify(
+        target_image, 
+        tile_h, tile_w, 
+        tile_index, tile_images, 
+        verbose=0, 
+        use_stabilization=False,
+        stabilization_threshold=0.95,
+    ):
     rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
     mosaic = np.zeros(target_image.shape)
 
+    if use_stabilization:
+        last_dist = np.zeros(target_image.shape).astype(np.int32)
+        last_dist[:, :] = 2**32 -1
+
     timings = []
-    print("We have %d tiles to assign" % len(rect_starts))
+    if verbose:
+        print("We have %d tiles to assign" % len(rect_starts))
 
     for (j, (x, y)) in enumerate(rect_starts):
         starttime = time.time()
@@ -20,12 +32,19 @@ def mosiacify(target_image, tile_h, tile_w, tile_index, tile_images):
         v = to_vector(target, tile_h, tile_w)
         
         # find nearest codebook image
-        _, I = tile_index.search(v, k=1) 
+        dist, I = tile_index.search(v, k=1) 
         idx = I[0][0]
         closest_tile = tile_images[idx]
         
         # write into mosaic
-        mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
+        if use_stabilization:
+            if dist < last_dist[x, y] * stabilization_threshold:
+                mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
+        else:
+            mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
+
+        # set new last dist
+        last_dist[x, y] = dist
         
         # record the performance
         elapsed = time.time() - starttime
@@ -33,5 +52,6 @@ def mosiacify(target_image, tile_h, tile_w, tile_index, tile_images):
         
     # show some results
     arr = np.array(timings)
-    print("Timings: mean=%.5f, stddev=%.5f" % (arr.mean(), arr.std()))
+    if verbose:
+        print("Timings: mean=%.5f, stddev=%.5f" % (arr.mean(), arr.std()))
     return mosaic, rect_starts, arr

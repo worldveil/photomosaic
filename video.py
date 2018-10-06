@@ -2,6 +2,7 @@ import time
 import argparse
 
 import numpy as np
+import matplotlib.pyplot as plt
 import cv2
 
 from emosiac.utils.indexing import index_images
@@ -10,7 +11,7 @@ from emosiac import mosiacify
 """
 Example usage:
 
-    $ python video.py \
+    $ ipython -i video.py -- \
         --codebook-dir images/pics/ \
         --target "images/vids/fireworks.mp4" \
         --scale 12 \
@@ -40,8 +41,12 @@ tile_index, _, tile_images = index_images(
 
 # create our video writer
 print("Creating video reader & writer...")
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
+fps = 30.0
+write_shape = (720, 1280)
+fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+out = cv2.VideoWriter(
+    'video-scale-%d.avi' % args.scale, 
+    fourcc, fps, write_shape)
 
 # our video reader
 cap = cv2.VideoCapture(args.target)
@@ -50,36 +55,49 @@ cap = cv2.VideoCapture(args.target)
 print("Starting encoding process...")
 timings = []
 frame_count = 0
-video_fps = 30
+seconds = 20
+frames = []
 
 while cap.isOpened():
-    if frame_count > video_fps * 10:
+    if frame_count > int(fps * seconds):
         # stop after N seconds
+        print("Done! Reached enough frames.")
         break
 
     starttime = time.time()
     ret, frame = cap.read()
+    if not ret:
+        break
 
     # encode image using codebook
     mosaic, _, _ = mosiacify(
         frame, height, width, 
-        tile_index, tile_images)
+        tile_index, tile_images,
+        use_stabilization=True,
+        stabilization_threshold=0.9)
 
-    out.write(mosaic)
+    try:
+        to_write = mosaic.astype(np.uint8)
+        frames.append(to_write)
+        out.write(to_write)
+    except Exception as e:
+        print(e)
+        break
 
     # record timing
     elapsed = time.time() - starttime
     timings.append(elapsed)
     frame_count += 1
-    print("Encoded frame %d!" % frame_count)
+    if frame_count % fps == 0:
+        print("Encoded frame %d!" % frame_count)
 
-print("Done! Releasing resources...")
+# print("Done! Releasing resources...")
 cap.release()
 cv2.destroyAllWindows()
+out.release()
 
 # reporting timing
 timings_arr = np.array(timings)
 mean = timings_arr.mean()
 stddev = timings_arr.std()
 print("Mean: %.5f +/- %.5f" % (mean, stddev))
-

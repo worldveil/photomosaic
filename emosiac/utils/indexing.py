@@ -49,7 +49,7 @@ def index_images(
 
         # how fast did we go?
         elapsed = time.time() - starttime
-        print("took %.4f seconds (%.4f per image)" % (elapsed, elapsed / len(path_jobs)))
+        print("Indexing took %.4f seconds (%.4f per image)" % (elapsed, elapsed / len(path_jobs)))
 
         # get the results, store in ordered (indexed) list
         images = []
@@ -64,6 +64,7 @@ def index_images(
         index.add(matrix)
 
         # resize & cache
+        print("Resizing images to (%d, %d)..." % (height, width))
         tile_images = []
         for image in images:
             img = image.load_image()
