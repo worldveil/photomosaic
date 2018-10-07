@@ -133,7 +133,8 @@ print("Extracting audio from original path...")
 dst_audiopath = '/tmp/%d-audio-extract.mp4' % args.scale
 success = extract_audio(
     src_videopath=args.target, 
-    dst_audiopath=dst_audiopath)
+    dst_audiopath=dst_audiopath, 
+    verbose=0)
 if not success:
     print("Error extracting original audio!")
     sys.exit(1)
@@ -143,7 +144,8 @@ print("Splicing original audio into mosaic video...")
 success = add_audio_to_video(
     dst_savepath=mosaic_video_savepath, 
     src_audiopath=dst_audiopath, 
-    src_videopath=video_only_mosaic_video_savepath)
+    src_videopath=video_only_mosaic_video_savepath, 
+    verbose=0)
 if not success:
     print("Error splicing audio!")
     sys.exit(1)

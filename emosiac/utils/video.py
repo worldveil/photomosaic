@@ -89,6 +89,8 @@ def calculate_framecount(videopath, verbose=1):
 
 def compress_video(src, dst):
     """
+    https://gist.github.com/lukehedger/277d136f68b028e22bed
+    
     ffmpeg -i input.mp4 -vcodec h264 -acodec aac output.mp4
     """
     pass
