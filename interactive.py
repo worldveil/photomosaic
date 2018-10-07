@@ -62,8 +62,12 @@ def compute_hw(scale):
 
 aspect_ratio = args.height_aspect / float(args.width_aspect)
 
+# load target image 
+target_image = cv2.imread(args.target)
+
 # create indexes for each possible scale
 scale2index = {}
+scale2mosaic = {}
 count = 0
 scales = range(args.min_scale, args.max_scale + 1, 1)
 with tqdm(total=len(scales)) as pbar:
@@ -77,22 +81,31 @@ with tqdm(total=len(scales)) as pbar:
             vectorization_scaling_factor=args.vectorization_factor
         )
         scale2index[scale] = (tile_index, tile_images)
+
+        # then precompute the mosiac 
+        h, w = compute_hw(scale)
+
+        # mosaic-ify & show it
+        mosaic, _, _ = mosiacify(
+            target_image, h, w, tile_index, tile_images, 
+            use_stabilization=True,
+            stabilization_threshold=0.85)
+        scale2mosaic[scale] = mosaic
+
         count += 1
         pbar.update(count)
-
-# load target image 
-target_image = cv2.imread(args.target)
-mosaic = np.zeros(target_image.shape)
 
 # Create our window
 window_name = 'Mosaic Interactive Scaling'
 slider_name = 'Scale'
 cv2.namedWindow(window_name)
-cv2.createTrackbar(slider_name, window_name, args.min_scale, args.max_scale, lambda x: None)
+cv2.createTrackbar(slider_name, window_name, 0, args.max_scale - args.min_scale, lambda x: None)
 last_scale = -1
-mosaic = None
+mosaic = np.array(target_image)
 
 while True:
+    cv2.imshow(window_name, mosaic)
+
     # user operation key commands
     if cv2.waitKey(1) & 0xFF == 27:  # ESC key
         break
@@ -107,20 +120,23 @@ while True:
         break
 
     # get current position of trackbar
-    scale = cv2.getTrackbarPos(slider_name, window_name)
+    gui_scale = cv2.getTrackbarPos(slider_name, window_name)
+    scale = gui_scale + args.min_scale  # since sliders must always start at zero...
 
-    if scale == 0 or last_scale == -1:
+    if scale == args.min_scale or last_scale == -1:
         # show original image
-        cv2.imshow(window_name, target_image)
+        mosaic = np.array(target_image)
 
     elif scale != last_scale:
-        # get index for this scale
-        index, images = scale2index[scale]
-        h, w = compute_hw(scale)
+        print("Scale change detected! %d -> %d" % (last_scale, scale))
 
-        # mosaic-ify & show it
-        mosaic, _, _ = mosiacify(target_image, h, w, index, images)
-        cv2.imshow(window_name, mosaic)
+        # get index for this scale
+        if scale not in scale2index:
+            print("invalid scale! (%d)" % scale)
+            continue
+
+        # lookup the precomputed mosaic
+        mosaic = scale2mosaic[scale]
 
     # adjust our last seen scale
     last_scale = scale

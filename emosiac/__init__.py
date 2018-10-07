@@ -48,7 +48,8 @@ def mosiacify(
                 mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
 
             # set new last dist
-            last_dist[x, y] = dist
+            if use_stabilization:
+                last_dist[x, y] = dist
             
             # record the performance
             elapsed = time.time() - starttime
@@ -58,7 +59,7 @@ def mosiacify(
         arr = np.array(timings)
         if verbose:
             print("Timings: mean=%.5f, stddev=%.5f" % (arr.mean(), arr.std()))
-        return mosaic, rect_starts, arr
+        return mosaic.astype(np.uint8), rect_starts, arr
 
     except Exception:
         print(traceback.format_exc())
