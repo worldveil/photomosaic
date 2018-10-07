@@ -1,14 +1,16 @@
 import time
 import argparse
 import os
+import sys
 
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+from tqdm import tqdm
 
 from emosiac.utils.indexing import index_images
 from emosiac import mosiacify
-from emosiac.utils.video import extract_audio, add_audio_to_video
+from emosiac.utils.video import extract_audio, add_audio_to_video, calculate_framecount
 
 """
 Example usage:
@@ -19,7 +21,7 @@ Example usage:
         --scale 14 \
         --height-aspect 4 \
         --width-aspect 3 \
-        --savepath "images/vids/fireworks-%d.avi"
+        --savepath "images/vids/fireworks-%d.mp4"
 
 Or from within ipython:
 
@@ -29,7 +31,7 @@ Or from within ipython:
         --scale 8 \
         --height-aspect 4 \
         --width-aspect 3 \
-        --savepath "images/vids/fireworks-%d.avi"
+        --savepath "images/vids/fireworks-%d.mp4"
 """
 parser = argparse.ArgumentParser()
 
@@ -78,41 +80,42 @@ cap = cv2.VideoCapture(args.target)
 print("Starting encoding process...")
 timings = []
 frame_count = 0
+num_frames = calculate_framecount(args.target)
 
-while cap.isOpened():
-    # early stopping option
-    if args.seconds > 0:
-        if frame_count > int(args.fps * args.seconds):
-            print("Done! Reached enough frames.")
+with tqdm(total=num_frames) as pbar:
+    while cap.isOpened():
+        # early stopping option
+        if args.seconds > 0:
+            if frame_count > int(args.fps * args.seconds):
+                print("Done! Reached enough frames.")
+                break
+
+        # grab our new frame, check that it worked
+        starttime = time.time()
+        ret, frame = cap.read()
+        if not ret:
             break
 
-    # grab our new frame, check that it worked
-    starttime = time.time()
-    ret, frame = cap.read()
-    if not ret:
-        break
+        # encode image using codebook
+        mosaic, _, _ = mosiacify(
+            frame, height, width, 
+            tile_index, tile_images,
+            use_stabilization=True,
+            stabilization_threshold=0.9)
 
-    # encode image using codebook
-    mosaic, _, _ = mosiacify(
-        frame, height, width, 
-        tile_index, tile_images,
-        use_stabilization=True,
-        stabilization_threshold=0.9)
+        # write to video file on disk
+        try:
+            to_write = mosaic.astype(np.uint8)
+            out.write(to_write)
+        except Exception as e:
+            print(e)
+            break
 
-    # write to video file on disk
-    try:
-        to_write = mosaic.astype(np.uint8)
-        out.write(to_write)
-    except Exception as e:
-        print(e)
-        break
-
-    # record timing
-    elapsed = time.time() - starttime
-    timings.append(elapsed)
-    frame_count += 1
-    if frame_count % args.fps == 0:
-        print("Encoded frame %d!" % frame_count)
+        # record timing
+        elapsed = time.time() - starttime
+        timings.append(elapsed)
+        frame_count += 1
+        pbar.update(1 + frame_count)
 
 # print("Done! Releasing resources...")
 cap.release()
@@ -126,19 +129,26 @@ stddev = timings_arr.std()
 print("Mean: %.5f +/- %.5f" % (mean, stddev))
 
 # extract audio from original video 
-dst_audiopath = '/tmp/%d-audio-extract' % args.scale
+print("Extracting audio from original path...")
+dst_audiopath = '/tmp/%d-audio-extract.mp4' % args.scale
 success = extract_audio(
     src_videopath=args.target, 
     dst_audiopath=dst_audiopath)
 if not success:
     print("Error extracting original audio!")
+    sys.exit(1)
 
 # put original audio into new video
-add_audio_to_video(
+print("Splicing original audio into mosaic video...")
+success = add_audio_to_video(
     dst_savepath=mosaic_video_savepath, 
     src_audiopath=dst_audiopath, 
     src_videopath=video_only_mosaic_video_savepath)
+if not success:
+    print("Error splicing audio!")
+    sys.exit(1)
 
 # clean up files
+print("Cleaning up...")
 os.remove(dst_audiopath)
 os.remove(video_only_mosaic_video_savepath)
