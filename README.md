@@ -130,3 +130,13 @@ $ python scripts/scrape_popular_emojis.py
 ```
 
 To get the set of all (not just popular) emojis, download the 128 x 128 set from [here](https://emojipedia.org/emojione/3.1/).
+
+### Unit tests
+
+There is a small (but embarassingly incomplete) test suite that you can run with:
+
+```bash
+sh test.sh
+```
+
+Not much coverage at the moment. 

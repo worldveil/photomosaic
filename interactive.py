@@ -7,14 +7,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-from emosiac.utils.indexing import index_images
+from emosiac.utils.indexing import index_at_multiple_scales
 from emosiac import mosiacify
-from emosiac.utils.misc import is_running_jupyter
-
-if is_running_jupyter():
-    from tqdm import tqdm_notebook as tqdm
-else:
-    from tqdm import tqdm
 
 """
 Example usage:
@@ -42,7 +36,6 @@ parser.add_argument("--target", dest='target', type=str, required=True, help="Im
 # optional
 parser.add_argument("--min-scale", dest='min_scale', type=int, required=False, help="Minimum scale to index")
 parser.add_argument("--max-scale", dest='max_scale', type=int, required=False, help="Maximum scale to index")
-# parser.add_argument('--scales', nargs='+', required=False, type=int, help="List of scales to ")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
@@ -56,44 +49,23 @@ print("Images=%s, target=%s, min_scale=%d, max_scale=%d, aspect_ratio=%.4f, vect
     args.codebook_dir, args.target, args.min_scale, args.max_scale, 
     args.height_aspect / args.width_aspect, args.vectorization_factor))
 
-def compute_hw(scale):
-    height, width = int(args.height_aspect * scale), int(args.width_aspect * scale)
-    return height, width
-
 aspect_ratio = args.height_aspect / float(args.width_aspect)
 
 # load target image 
 target_image = cv2.imread(args.target)
 
 # create indexes for each possible scale
-scale2index = {}
-scale2mosaic = {}
-count = 0
-scales = range(args.min_scale, args.max_scale + 1, 1)
-with tqdm(total=len(scales)) as pbar:
-    for scale in scales:
-        print("Indexing scale=%d..." % scale)
-        h, w = compute_hw(scale)
-        tile_index, _, tile_images = index_images(
-            paths='%s/*.jpg' % args.codebook_dir,
-            aspect_ratio=aspect_ratio, 
-            height=h, width=w,
-            vectorization_scaling_factor=args.vectorization_factor
-        )
-        scale2index[scale] = (tile_index, tile_images)
-
-        # then precompute the mosiac 
-        h, w = compute_hw(scale)
-
-        # mosaic-ify & show it
-        mosaic, _, _ = mosiacify(
-            target_image, h, w, tile_index, tile_images, 
-            use_stabilization=True,
-            stabilization_threshold=0.85)
-        scale2mosaic[scale] = mosaic
-
-        count += 1
-        pbar.update(count)
+scale2index, scale2mosaic = index_at_multiple_scales(
+    args.codebook_dir,
+    min_scale=args.min_scale,
+    max_scale=args.max_scale,
+    height_aspect=args.height_aspect,
+    width_aspect=args.width_aspect,
+    vectorization_factor=args.vectorization_factor,
+    precompute_target=target_image,
+    use_stabilization=True,
+    stabilization_threshold=0.85
+)
 
 # Create our window
 window_name = 'Mosaic Interactive Scaling'

@@ -6,6 +6,10 @@ import faiss
 from emosiac.image import Image
 
 
+def compute_hw(scale, height_aspect, width_aspect):
+    height, width = int(height_aspect * scale), int(width_aspect * scale)
+    return height, width
+
 def load_and_vectorize_image(args):
   """
   @args: (path, h, w, c, aspect_ratio)

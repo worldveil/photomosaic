@@ -6,9 +6,60 @@ import numpy as np
 import faiss
 import cv2 
 
-from emosiac.utils.image import load_and_vectorize_image
+from emosiac.utils.image import load_and_vectorize_image, compute_hw
+from emosiac.utils.misc import is_running_jupyter
+from emosiac import mosiacify
+
+if is_running_jupyter():
+    from tqdm import tqdm_notebook as tqdm
+else:
+    from tqdm import tqdm
 
 
+def index_at_multiple_scales(
+        codebook_dir,
+        min_scale,
+        max_scale,
+        height_aspect,
+        width_aspect,
+        vectorization_factor=1,
+        precompute_target=None, 
+        use_stabilization=True,
+        stabilization_threshold=0.85,
+    ):
+    scale2index = {}
+    scale2mosaic = {}
+    count = 0
+    scales = range(min_scale, max_scale + 1, 1)
+    aspect_ratio = height_aspect / float(width_aspect)
+
+    with tqdm(total=len(scales)) as pbar:
+        for scale in scales:
+            print("Indexing scale=%d..." % scale)
+            h, w = compute_hw(scale, height_aspect, width_aspect)
+            tile_index, _, tile_images = index_images(
+                paths='%s/2016-03*.jpg' % codebook_dir,
+                aspect_ratio=aspect_ratio, 
+                height=h, width=w,
+                vectorization_scaling_factor=vectorization_factor
+            )
+            scale2index[scale] = (tile_index, tile_images)
+
+            # then precompute the mosiac 
+            h, w = compute_hw(scale, height_aspect, width_aspect)
+
+            # mosaic-ify & show it
+            if precompute_target is not None:
+                mosaic, _, _ = mosiacify(
+                    precompute_target, h, w, tile_index, tile_images, 
+                    use_stabilization=use_stabilization,
+                    stabilization_threshold=stabilization_threshold)
+                scale2mosaic[scale] = mosaic
+
+            count += 1
+            pbar.update(count)
+
+    return scale2index, scale2mosaic
 
 def index_images(
         paths, 

@@ -1,1 +1,4 @@
 images/*
+.cache/
+.DS_Store
+*.pyc
