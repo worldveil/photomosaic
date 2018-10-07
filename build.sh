@@ -1,1 +1,1 @@
-docker build -t emoji-conda -f Dockerfile .
+docker build -t emoji-conda -f Dockerfile.cpu .
