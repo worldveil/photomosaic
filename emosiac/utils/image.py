@@ -154,7 +154,7 @@ def to_vector(img, h, w, c=3):
     interpolation=cv2.INTER_AREA)
   return resized.reshape(-1, h * w * c).astype(np.float32)
 
-def index_images(paths, vectorization_downsize_factor=0.1, resize_downsize_factor=1):
+def index_images(paths, vectorization_downsize_factor=0.1, resize_downsize_factor=1, verbose=1):
   """
   @return: valid_image_paths
   @return: valid_images

@@ -17,7 +17,8 @@ def index_images(
         width, 
         nchannels=3, 
         vectorization_scaling_factor=1, 
-        index_class=faiss.IndexFlatL2):
+        index_class=faiss.IndexFlatL2,
+        verbose=1):
     """
     @param: paths (list of Strings OR glob pattern string) image paths to load
     @param: aspect_ratio (float) height / width
@@ -49,7 +50,8 @@ def index_images(
 
         # how fast did we go?
         elapsed = time.time() - starttime
-        print("Indexing took %.4f seconds (%.4f per image)" % (elapsed, elapsed / len(path_jobs)))
+        if verbose:
+            print("Indexing took %.4f seconds (%.4f per image)" % (elapsed, elapsed / len(path_jobs)))
 
         # get the results, store in ordered (indexed) list
         images = []
@@ -64,7 +66,8 @@ def index_images(
         index.add(matrix)
 
         # resize & cache
-        print("Resizing images to (%d, %d)..." % (height, width))
+        if verbose:
+            print("Resizing images to (%d, %d)..." % (height, width))
         tile_images = []
         for image in images:
             img = image.load_image()

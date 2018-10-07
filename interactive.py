@@ -6,10 +6,15 @@ import argparse
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm import tqdm
 
 from emosiac.utils.indexing import index_images
 from emosiac import mosiacify
+from emosiac.utils.misc import is_running_jupyter
+
+if is_running_jupyter():
+    from tqdm import tqdm_notebook as tqdm
+else:
+    from tqdm import tqdm
 
 """
 Example usage:
