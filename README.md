@@ -6,8 +6,10 @@ Creating photomosiac images.
 
 Ensure you have installed:
 
-* Docker
-* XQuartz (version 2.7.5 or higher)
+* `Docker`
+* `XQuartz` (version 2.7.5 or higher) if you'd like to run the `interactive.py` OpenCV GUI explorer. Otherwise you don't need it.
+
+I've only tested this on my Mac OS X, but since it's Dockerized it should run anywhere Docker does!
 
 Next, build the Docker images and run a container:
 
@@ -103,6 +105,17 @@ Arguments:
 
 You can adjust aspect ratio here too, but those and more are optional arguments. 
 
+### 4) Create a GIF from a series of mosaics at varying tile scales
+
+```
+$ python make_gif.py \
+    --target "images/pics/2018-04-01 12.00.27.jpg" \
+    --savepath "images/output/%s-from-%d-to-%d.gif" \
+    --codebook-dir images/pics/ \
+    --min-scale 5 \
+    --max-scale 25 \
+    --fps 3
+```
 
 ### Emojis
 
