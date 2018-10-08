@@ -15,6 +15,7 @@ Example usage:
     $ python mosaic.py \
         --codebook-dir images/pics/ \
         --target "images/pics/2018-04-01 12.00.27.jpg" \
+        --savepath "images/output/%s-%d.jpg" \
         --scale 1 \
         --height-aspect 4 \
         --width-aspect 3 \
@@ -24,6 +25,7 @@ parser = argparse.ArgumentParser()
 
 # required
 parser.add_argument("--codebook-dir", dest='codebook_dir', type=str, required=True, help="Source folder of images")
+parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Where to save image to. Scale/filename is used in formatting.")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Image to make mosaic from")
 parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
 
@@ -69,6 +71,6 @@ except:
 
 # save to disk
 filename = os.path.basename(args.target)
-savepath = 'images/output/mosaic-%s-scale-%03d.jpg' % (filename, args.scale)
+savepath = args.savepath % (filename, args.scale)
 cv2.imwrite(savepath, mosaic.astype(np.uint8))
 
