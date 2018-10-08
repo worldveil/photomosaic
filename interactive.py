@@ -71,7 +71,7 @@ scale2index, scale2mosaic = index_at_multiple_scales(
 window_name = 'Mosaic Interactive Scaling'
 slider_name = 'Scale'
 cv2.namedWindow(window_name)
-cv2.createTrackbar(slider_name, window_name, 0, args.max_scale - args.min_scale, lambda x: None)
+cv2.createTrackbar(slider_name, window_name, 0, args.max_scale - args.min_scale + 1, lambda x: None)
 last_scale = -1
 mosaic = np.array(target_image)
 
@@ -93,9 +93,9 @@ while True:
 
     # get current position of trackbar
     gui_scale = cv2.getTrackbarPos(slider_name, window_name)
-    scale = gui_scale + args.min_scale  # since sliders must always start at zero...
+    scale = gui_scale + args.min_scale - 1 # since sliders must always start at zero...
 
-    if scale == args.min_scale or last_scale == -1:
+    if scale == args.min_scale - 1 or last_scale == -1:
         # show original image
         mosaic = np.array(target_image)
 
