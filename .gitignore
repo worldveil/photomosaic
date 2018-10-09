@@ -1,6 +1,6 @@
 *.pyc
 .DS_Store
-images/
+media/
 .pytest_cache/
 emosiac/tests/output/*
 .ipynb_checkpoints/

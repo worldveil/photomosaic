@@ -13,9 +13,9 @@ from emosiac import mosiacify
 Example usage:
 
     $ python mosaic.py \
-        --codebook-dir images/pics/ \
-        --target "images/pics/2018-04-01 12.00.27.jpg" \
-        --savepath "images/output/%s-%d.jpg" \
+        --target "media/example/beach.jpg" \
+        --savepath "media/output/%s-mosiac-scale-%d.jpg" \
+        --codebook-dir media/pics/ \
         --scale 1 \
         --height-aspect 4 \
         --width-aspect 3 \
@@ -38,6 +38,7 @@ parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=
 # parser.add_argument('--feature', dest='feature', action='store_true')
 args = parser.parse_args()
 
+print("=== Creating Mosaic Image ===")
 print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d" % (
     args.codebook_dir, args.target, args.scale, args.height_aspect / args.width_aspect, 
     args.vectorization_factor))
@@ -70,7 +71,8 @@ except:
     pass
 
 # save to disk
-filename = os.path.basename(args.target)
+filename = os.path.basename(args.target).split('.')[0]
 savepath = args.savepath % (filename, args.scale)
+print("Writing mosaic image to '%s' ..." % savepath)
 cv2.imwrite(savepath, mosaic.astype(np.uint8))
 

@@ -75,16 +75,21 @@ while True:
     # user operation key commands
     if cv2.waitKey(1) & 0xFF == 27:  # ESC key
         break
-    elif cv2.waitKey(1) & 0xFF == 83:  # 's' key
+    elif cv2.waitKey(1) & 0xFF == 115:  # 's' key
         if mosaic is None:
             print("Adjust the scale before saving!")
             continue
 
         filename = os.path.basename(args.target)
         savepath = args.savepath % (filename, last_scale)
-        print("Saving image to %s..." % savepath)
+        print("Saving mosaic image to '%s' ..." % savepath)
         cv2.imwrite(savepath, mosaic.astype(np.uint8))
         break
+    else:
+        try:
+            print("key pressed = %d" % (cv2.waitKey(1) & 0xFF))
+        except Exception:
+            import ipdb; ipdb.set_trace()
 
     # get current position of trackbar
     gui_scale = cv2.getTrackbarPos(slider_name, window_name)

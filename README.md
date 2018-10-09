@@ -38,9 +38,9 @@ Reconstruct an image using a set of other images, downsized and used as tiles.
 
 ```bash
 $ python mosaic.py \
-    --target "images/pics/2018-04-01 12.00.27.jpg" \
-    --savepath "images/output/%s-%d.jpg" \
-    --codebook-dir images/pics/ \
+    --target "media/example/beach.jpg" \
+    --savepath "media/output/%s-mosiac-scale-%d.jpg" \
+    --codebook-dir media/pics/ \
     --scale 1 \
     --height-aspect 4 \
     --width-aspect 3 \
@@ -63,12 +63,12 @@ Do the same, but with every frame of a video!
 
 ```bash
 $ python video.py \
-    --target "images/vids/fireworks.mp4" \
-    --codebook-dir images/pics/ \
+    --target "media/example/fireworks.mp4" \
+    --savepath "media/output/%s-at-scale-%d.mp4"
+    --codebook-dir media/pics/ \
     --scale 14 \
     --height-aspect 4 \
     --width-aspect 3 \
-    --savepath "images/vids/fireworks-%d.mp4"
 ```
 
 Arguments:

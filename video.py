@@ -54,6 +54,10 @@ args = parser.parse_args()
 height, width = int(args.height_aspect * args.scale), int(args.width_aspect * args.scale)
 aspect_ratio = height / float(width)
 
+print("=== Creating Mosaic Video ===")
+print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f" % (
+    args.codebook_dir, args.target, args.scale, args.height_aspect / args.width_aspect))
+
 # index all those images
 print("Indexing images...")
 tile_index, _, tile_images = index_images(
@@ -67,7 +71,8 @@ tile_index, _, tile_images = index_images(
 print("Creating video reader & writer...")
 write_shape = (720, 1280)
 fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-mosaic_video_savepath = args.savepath % args.scale
+base_filename = os.path.basename(args.target).split('.')[0]
+mosaic_video_savepath = args.savepath % (base_filename, args.scale)
 video_only_mosaic_video_savepath = '/tmp/%s' % os.path.basename(mosaic_video_savepath)
 out = cv2.VideoWriter(
     video_only_mosaic_video_savepath, 
@@ -149,6 +154,8 @@ success = add_audio_to_video(
 if not success:
     print("Error splicing audio!")
     sys.exit(1)
+
+print("Writing mosaic video to '%s' ..." % mosaic_video_savepath)
 
 # clean up files
 print("Cleaning up...")
