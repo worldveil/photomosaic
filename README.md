@@ -36,9 +36,10 @@ sh enter.sh
 
 Reconstruct an image using a set of other images, downsized and used as tiles. 
 
-```
+```bash
 $ python mosaic.py \
     --target "images/pics/2018-04-01 12.00.27.jpg" \
+    --savepath "images/output/%s-%d.jpg" \
     --codebook-dir images/pics/ \
     --scale 1 \
     --height-aspect 4 \
@@ -60,7 +61,7 @@ Arguments:
 
 Do the same, but with every frame of a video!
 
-```
+```bash
 $ python video.py \
     --target "images/vids/fireworks.mp4" \
     --codebook-dir images/pics/ \
@@ -88,9 +89,10 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 
 On a single frame, play around with different scales (sizes) and see which one looks best. 
 
-```
+```bash
 $ python interactive.py \
     --target "images/pics/2018-04-01 12.00.27.jpg" \
+    --savepath "images/output/%s-%d.jpg" \
     --codebook-dir images/pics/ \
     --min-scale 1 \
     --max-scale 12
@@ -107,7 +109,7 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 
 ### 4) Create a GIF from a series of mosaics at varying tile scales
 
-```
+```bash
 $ python make_gif.py \
     --target "images/pics/2018-04-01 12.00.27.jpg" \
     --savepath "images/output/%s-from-%d-to-%d.gif" \

@@ -16,22 +16,16 @@ Example usage:
     $ python interactive.py \
         --codebook-dir images/pics/ \
         --target "images/pics/2018-04-01 12.00.27.jpg" \
-        --min-scale 1 \
-        --max-scale 12
-
-IPython:
-
-    run interactive.py \
-        --codebook-dir images/pics/ \
-        --target "images/pics/2018-04-01 12.00.27.jpg" \
-        --min-scale 1 \
-        --max-scale 12
+        --savepath "images/output/%s-%d.jpg" \
+        --min-scale 12 \
+        --max-scale 14
 """
 parser = argparse.ArgumentParser()
 
 # required
 parser.add_argument("--codebook-dir", dest='codebook_dir', type=str, required=True, help="Source folder of images")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Image to make mosaic from")
+parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Where to save image to. Scale/filename is used in formatting.")
 
 # optional
 parser.add_argument("--min-scale", dest='min_scale', type=int, required=False, help="Minimum scale to index")
@@ -87,7 +81,8 @@ while True:
             continue
 
         filename = os.path.basename(args.target)
-        savepath = 'images/output/mosaic-%s-scale-%03d.jpg' % (filename, last_scale)
+        savepath = args.savepath % (filename, last_scale)
+        print("Saving image to %s..." % savepath)
         cv2.imwrite(savepath, mosaic.astype(np.uint8))
         break
 
