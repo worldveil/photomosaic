@@ -6,22 +6,27 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-from tqdm import tqdm
 
-from emosiac.utils.indexing import index_images
 from emosiac import mosiacify
+from emosiac.utils.indexing import index_images
 from emosiac.utils.video import extract_audio, add_audio_to_video, calculate_framecount
+from emosiac.utils.misc import is_running_jupyter
+
+if is_running_jupyter():
+    from tqdm import tqdm_notebook as tqdm
+else:
+    from tqdm import tqdm
 
 """
 Example usage:
 
     $ ipython -i video.py -- \
-        --codebook-dir images/pics/ \
-        --target "images/vids/fireworks.mp4" \
+        --codebook-dir media/pics/ \
+        --target "media/vids/peru.mp4" \
         --scale 14 \
         --height-aspect 4 \
         --width-aspect 3 \
-        --savepath "images/vids/fireworks-%d.mp4"
+        --savepath "media/output/%s-at-scale-%d.mp4"
 
 Or from within ipython:
 
@@ -69,25 +74,23 @@ tile_index, _, tile_images = index_images(
 
 # create our video writer
 print("Creating video reader & writer...")
-write_shape = (720, 1280)
-fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+fourcc = cv2.VideoWriter_fourcc(*'MP4V')  # 'MJPG' also a good one
 base_filename = os.path.basename(args.target).split('.')[0]
 mosaic_video_savepath = args.savepath % (base_filename, args.scale)
-video_only_mosaic_video_savepath = '/tmp/%s' % os.path.basename(mosaic_video_savepath)
-out = cv2.VideoWriter(
-    video_only_mosaic_video_savepath, 
-    fourcc, args.fps, write_shape)
+video_only_mosaic_video_savepath = '/project/test.mp4'  #'/tmp/%s' % os.path.basename(mosaic_video_savepath)
+out = None
 
 # our video reader
 cap = cv2.VideoCapture(args.target)
 
 # see how quickly we can convert
-print("Starting encoding process...")
+print("Calculating number of frames...")
 timings = []
 frame_count = 0
 num_frames = calculate_framecount(args.target)
+a_frame = None
 
-with tqdm(total=num_frames) as pbar:
+with tqdm(desc='Encoding:', total=num_frames) as pbar:
     while cap.isOpened():
         # early stopping option
         if args.seconds > 0:
@@ -98,12 +101,25 @@ with tqdm(total=num_frames) as pbar:
         # grab our new frame, check that it worked
         starttime = time.time()
         ret, frame = cap.read()
-        if not ret:
+
+        # initialize our writer to correct dimensions
+        # once we know the video resolution
+        if out is None:
+            # yeah, I know. OpenCV expects the write shape 
+            # to be (width, height). WHY THE FUCK, OPENCV, WHY.
+            # if you don't do this you'll get silent errors that
+            # waste an entire hour of your life.
+            write_shape = (frame.shape[1], frame.shape[0])
+            out = cv2.VideoWriter(
+                video_only_mosaic_video_savepath,
+                fourcc, args.fps, write_shape, True)
+            a_frame = frame
+        elif not ret or frame is None:
             break
 
         # encode image using codebook
         mosaic, _, _ = mosiacify(
-            frame, height, width, 
+            frame, height, width,
             tile_index, tile_images,
             use_stabilization=True,
             stabilization_threshold=0.9)
@@ -113,6 +129,7 @@ with tqdm(total=num_frames) as pbar:
             to_write = mosaic.astype(np.uint8)
             out.write(to_write)
         except Exception as e:
+            print("Error writing frame!")
             print(e)
             break
 
@@ -120,7 +137,7 @@ with tqdm(total=num_frames) as pbar:
         elapsed = time.time() - starttime
         timings.append(elapsed)
         frame_count += 1
-        pbar.update(1 + frame_count)
+        pbar.update(1)
 
 # print("Done! Releasing resources...")
 cap.release()
@@ -131,7 +148,7 @@ out.release()
 timings_arr = np.array(timings)
 mean = timings_arr.mean()
 stddev = timings_arr.std()
-print("Mean: %.5f +/- %.5f" % (mean, stddev))
+print("Mean per frame (secs): %.5f +/- %.5f" % (mean, stddev))
 
 # extract audio from original video 
 print("Extracting audio from original path...")

@@ -41,7 +41,7 @@ $ python mosaic.py \
     --target "media/example/beach.jpg" \
     --savepath "media/output/%s-mosiac-scale-%d.jpg" \
     --codebook-dir media/pics/ \
-    --scale 1 \
+    --scale 8 \
     --height-aspect 4 \
     --width-aspect 3 \
     --vectorization-factor 1
@@ -63,12 +63,12 @@ Do the same, but with every frame of a video!
 
 ```bash
 $ python video.py \
-    --target "media/example/fireworks.mp4" \
-    --savepath "media/output/%s-at-scale-%d.mp4"
-    --codebook-dir media/pics/ \
-    --scale 14 \
+    --target "media/example/cabo_sailing.mov" \
+    --savepath "media/output/%s-at-scale-%d.mp4" \
+    --codebook-dir "media/pics/" \
+    --scale 10 \
     --height-aspect 4 \
-    --width-aspect 3 \
+    --width-aspect 3
 ```
 
 Arguments:
@@ -91,9 +91,9 @@ On a single frame, play around with different scales (sizes) and see which one l
 
 ```bash
 $ python interactive.py \
-    --target "images/pics/2018-04-01 12.00.27.jpg" \
-    --savepath "images/output/%s-%d.jpg" \
-    --codebook-dir images/pics/ \
+    --target "media/example/arizona.jpg" \
+    --savepath "media/output/interactive-%s-at-scale-%d.jpg" \
+    --codebook-dir "media/pics/" \
     --min-scale 1 \
     --max-scale 12
 ```
@@ -111,9 +111,9 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 
 ```bash
 $ python make_gif.py \
-    --target "images/pics/2018-04-01 12.00.27.jpg" \
-    --savepath "images/output/%s-from-%d-to-%d.gif" \
-    --codebook-dir images/pics/ \
+    --target "media/pics/2018-04-01 12.00.27.jpg" \
+    --savepath "media/output/%s-from-%d-to-%d.gif" \
+    --codebook-dir "media/pics/" \
     --min-scale 5 \
     --max-scale 25 \
     --fps 3

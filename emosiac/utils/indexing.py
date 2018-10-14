@@ -102,7 +102,8 @@ def index_images(
         # how fast did we go?
         elapsed = time.time() - starttime
         if verbose:
-            print("Indexing took %.4f seconds (%.4f per image)" % (elapsed, elapsed / len(path_jobs)))
+            print("Indexing: %d images, %.4f seconds (%.4f per image)" % (
+                len(path_jobs), elapsed, elapsed / len(path_jobs)))
 
         # get the results, store in ordered (indexed) list
         images = []

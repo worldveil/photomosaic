@@ -1,5 +1,6 @@
 import subprocess
 import os
+import math
 
 def extract_audio(src_videopath, dst_audiopath, overwrite=True, verbose=1):
     """
@@ -72,9 +73,9 @@ def add_audio_to_video(dst_savepath, src_audiopath, src_videopath, overwrite=Tru
         return False
     return True
 
-def calculate_framecount(videopath, verbose=1):
-    cmd = "ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of default=nokey=1:noprint_wrappers=1 %(path)s" % dict(
-        path=videopath
+def probe_length(mediapath, verbose=0):
+    cmd = "ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 %(path)s" % dict(
+        path=mediapath,
     )
     if verbose:
         print(cmd)
@@ -83,9 +84,27 @@ def calculate_framecount(videopath, verbose=1):
     process.wait()
     out, _ = process.communicate()
     try:
-        return int(out.strip())
+        return float(out.strip())
     except ValueError:
         return None
+
+def probe_fps(mediapath, verbose=0):
+    cmd = "ffprobe -v error -select_streams v -of default=noprint_wrappers=1:nokey=1 -show_entries stream=r_frame_rate %(path)s" % dict(
+        path=mediapath,
+    )
+    if verbose:
+        print(cmd)
+    process = subprocess.Popen(cmd.split(' '), shell=False, 
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process.wait()
+    out, _ = process.communicate()
+    try:
+        return float(out.strip())
+    except ValueError:
+        return None
+
+def calculate_framecount(videopath, verbose=1):
+    return int(math.ceil(probe_length(videopath) * probe_fps(videopath)))
 
 def compress_video(src, dst):
     """
