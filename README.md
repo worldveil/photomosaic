@@ -32,7 +32,13 @@ If you'd like to SSH into the Docker container itself, after running the above:
 sh enter.sh
 ```
 
+Finally, and most importantly, get together some photos and videos you'd like to either create images from (use as mosaic tiles) or create mosaics of (turn your photos/videos into mosaics). I took my iPhone photos/videos for the last few years and threw them all in a folder, and you can see some of the cool results below.
+
 ## Photomosiac Scripts
+
+Note that the default setting for all of these scripts are to use caching, which means once you've indexed a particular folder of photos at a certain scale (read: tile size), you'll never need to do it again. 
+
+If you add or delete even a single file from the folder, photomosaic is smart enough to know to reindex. Cached index pickle files are stored by default in the `cache` folder.
 
 ### 1) Creating mosaics from an image
 
