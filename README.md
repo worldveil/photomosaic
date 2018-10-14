@@ -128,6 +128,8 @@ $ python make_gif.py \
     --ascending 0
 ```
 
+Note that the first time you run this on a container you might see a `Imageio: 'ffmpeg-linux64-v3.3.1' was not found on your computer; downloading it now.` message, that's normal.
+
 ### Using `ffprobe` / `ffmpeg`
 
 A few of the routines in this project make use of parameters from the video/audio files. I often call the command line utilities directly by spinning up a separate process, which is a little icky, but gets the job done.

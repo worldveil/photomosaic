@@ -14,9 +14,9 @@ from emosiac.utils.indexing import index_at_multiple_scales
 Example:
 
     $ run make_gif.py \
-        --target "images/pics/2018-04-01 12.00.27.jpg" \
-        --savepath "images/output/%s-from-%d-to-%d.gif" \
-        --codebook-dir images/pics/ \
+        --target "media/pics/2018-04-01 12.00.27.jpg" \
+        --savepath "media/output/%s-from-%d-to-%d.gif" \
+        --codebook-dir media/pics/ \
         --min-scale 14 \
         --max-scale 18 \
         --fps 3
