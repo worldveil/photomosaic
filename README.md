@@ -1,6 +1,22 @@
-# photo-emoji-mosiac
+# photomosiac
 
 Creating photomosiac images. 
+
+![photomosaic](media/readme/beach-mosaic-scale-8.jpg)
+
+## What does that mean?
+
+We're doing the digital equivilent of a very old technique - creating mosaics:
+
+![Mosaic example](media/readme/fish.jpg)
+
+except instead of using physical tiles, you can use your photo collection, emojis, or any set of digital images you'd like.
+
+Take a target image, say, a family photo. You can recreate that target image as a mosaic using a "codebook" of other images as tiles. If you intelligently search through and pick the best "codebook" image in your tileset, you can create arbitrarily good recreations of your target image. 
+
+This project cuts up the target image into tiles (you control the tile size with `scale` parameter), and for each tile patch, uses the L2 similarity metric (with an ultrafast lookup using Facebook's [faiss]() library) to find the closest codebook tile image to replace it with.
+
+You can even do this for each frame in a video and create videomosaics (see `video.py`). 
 
 ## Setup
 
