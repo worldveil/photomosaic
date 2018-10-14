@@ -57,7 +57,8 @@ tile_index, _, tile_images = index_images(
     aspect_ratio=aspect_ratio, 
     height=height,
     width=width,
-    vectorization_scaling_factor=args.vectorization_factor
+    vectorization_scaling_factor=args.vectorization_factor,
+    caching=True,
 )
 
 # transform!

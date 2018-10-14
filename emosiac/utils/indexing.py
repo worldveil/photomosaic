@@ -9,6 +9,7 @@ import cv2
 from emosiac.utils.image import load_and_vectorize_image, compute_hw
 from emosiac.utils.misc import is_running_jupyter
 from emosiac import mosiacify
+from emosiac.caching import MosaicCacheConfig
 
 if is_running_jupyter():
     from tqdm import tqdm_notebook as tqdm
@@ -27,6 +28,7 @@ def index_at_multiple_scales(
         use_stabilization=True,
         stabilization_threshold=0.85,
         randomness=0.0,
+        caching=True,
     ):
     scale2index = {}
     scale2mosaic = {}
@@ -42,7 +44,8 @@ def index_at_multiple_scales(
                 paths='%s/*.jpg' % codebook_dir,
                 aspect_ratio=aspect_ratio, 
                 height=h, width=w,
-                vectorization_scaling_factor=vectorization_factor
+                vectorization_scaling_factor=vectorization_factor,
+                caching=True,
             )
             scale2index[scale] = (tile_index, tile_images)
 
@@ -59,7 +62,7 @@ def index_at_multiple_scales(
                 scale2mosaic[scale] = mosaic
 
             count += 1
-            pbar.update(count)
+            pbar.update(1)
 
     return scale2index, scale2mosaic
 
@@ -71,7 +74,8 @@ def index_images(
         nchannels=3, 
         vectorization_scaling_factor=1, 
         index_class=faiss.IndexFlatL2,
-        verbose=1):
+        verbose=1,
+        caching=True):
     """
     @param: paths (list of Strings OR glob pattern string) image paths to load
     @param: aspect_ratio (float) height / width
@@ -95,8 +99,25 @@ def index_images(
             # paths is a glob pattern like: 'images/blah/*.jpg'
             paths = glob.glob(paths)
 
-        path_jobs = [(p, height, width, nchannels, aspect_ratio) for p in paths]  #[:200]
+        # should we retrieve a cached index?
+        if caching:
+            print("Caching is ON, checking for previously cached index...")
+            cache = MosaicCacheConfig(
+                paths=paths,
+                height=height,
+                width=width,
+                nchannels=nchannels,
+                index_class=index_class,
+                dimensions=vectorization_dimensionality)
+            cached = cache.load()
+            if cached is not None:
+                print("Found cached index, reading from disk...")
+                return cached['index'], cached['images'], cached['tile_images']
+            else:
+                print("No cached index found, creating from scratch...")
 
+        # nothing cached, let's index
+        path_jobs = [(p, height, width, nchannels, aspect_ratio) for p in paths]  #[:200]
         pool = ThreadPool(5)
         results = pool.map(load_and_vectorize_image, path_jobs)
         pool.close()
@@ -119,7 +140,7 @@ def index_images(
         matrix = np.array(vectors).reshape(-1, vectorization_dimensionality)
         index.add(matrix)
 
-        # resize & cache
+        # resize images to tiles
         if verbose:
             print("Resizing images to (%d, %d)..." % (height, width))
         tile_images = []
@@ -133,6 +154,10 @@ def index_images(
                 fy=width / float(img_w),
                 interpolation=cv2.INTER_AREA)
             tile_images.append(tile)
+
+        if caching:
+            print("Caching index to disk...")
+            cache.save(matrix, images, tile_images)
 
         return index, images, tile_images
 

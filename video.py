@@ -71,7 +71,8 @@ tile_index, _, tile_images = index_images(
     paths='%s/*.jpg' % args.codebook_dir,
     aspect_ratio=aspect_ratio, 
     height=height,
-    width=width
+    width=width,
+    caching=True,
 )
 
 # create our video writer

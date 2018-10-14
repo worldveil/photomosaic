@@ -49,10 +49,6 @@ parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3
 
 args = parser.parse_args()
 
-# load and setup
-target_image = cv2.imread(args.target)
-aspect_ratio = args.height_aspect / float(args.width_aspect)
-
 # index at various scales
 scale2index, scale2mosaic = index_at_multiple_scales(
     args.codebook_dir,
@@ -61,9 +57,10 @@ scale2index, scale2mosaic = index_at_multiple_scales(
     height_aspect=args.height_aspect,
     width_aspect=args.width_aspect,
     vectorization_factor=args.vectorization_factor,
-    precompute_target=target_image,
+    precompute_target=cv2.imread(args.target),
     use_stabilization=True,
-    stabilization_threshold=0.85
+    stabilization_threshold=0.85,
+    caching=True
 )
 
 # create a temporary diretory to save images to
@@ -91,5 +88,4 @@ create_gif_from_images(
     ascending=bool(args.ascending))
 
 # remove temp directory 
-# shutil.rmtree(tmp_dir)
-
+shutil.rmtree(tmp_dir)

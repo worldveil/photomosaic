@@ -61,6 +61,7 @@ scale2index, scale2mosaic = index_at_multiple_scales(
     use_stabilization=True,
     stabilization_threshold=0.85,
     randomness=args.randomness,
+    caching=True,
 )
 
 # Create our window
