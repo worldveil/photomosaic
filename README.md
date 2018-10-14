@@ -2,13 +2,15 @@
 
 Creating photomosiac images. 
 
-![photomosaic](media/readme/beach-mosaic-scale-8.jpg)
+<img src="media/readme/beach-mosiac-scale-8.jpg" height="500">
 
 ## What does that mean?
 
 We're doing the digital equivilent of a very old technique - creating mosaics:
 
-![Mosaic example](media/readme/fish.jpg)
+<p align="center">
+   <img src="media/readme/fish.jpg" height="200">
+</p>
 
 except instead of using physical tiles, you can use your photo collection, emojis, or any set of digital images you'd like.
 
