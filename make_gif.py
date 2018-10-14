@@ -9,6 +9,12 @@ import moviepy.editor as mpy
 from emosiac.utils.gif import create_gif_from_images
 from emosiac.utils.misc import ensure_directory
 from emosiac.utils.indexing import index_at_multiple_scales
+from emosiac.utils.misc import is_running_jupyter
+
+if is_running_jupyter():
+    from tqdm import tqdm_notebook as tqdm
+else:
+    from tqdm import tqdm
 
 """
 Example:
@@ -36,6 +42,7 @@ parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=
     help="Downsize the image by this much before vectorizing")
 
 # optional / has default
+parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--ascending", dest='ascending', type=int, default=1, help="1 for ascending, 0 for descending order of scales")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
@@ -65,11 +72,15 @@ ensure_directory(tmp_dir)
 
 # create mosaics at various scales, and save them to the folder above
 img_paths = []
-for i, scale in enumerate(range(args.min_scale, args.max_scale + 1, 1)):
-    img_savepath = os.path.join(tmp_dir, "%08d.jpg" % i)
-    mosaic = scale2mosaic[scale]
-    cv2.imwrite(img_savepath, mosaic)
-    img_paths.append(img_savepath)
+scales = range(args.min_scale, args.max_scale + 1, 1)
+
+with tqdm(desc='Indexing:', total=len(scales)) as pbar:
+    for i, scale in enumerate(scales):
+        img_savepath = os.path.join(tmp_dir, "%08d.jpg" % i)
+        mosaic = scale2mosaic[scale]
+        cv2.imwrite(img_savepath, mosaic)
+        img_paths.append(img_savepath)
+        pbar.update(1)
 
 # create the GIF!
 savepath = args.savepath % (
