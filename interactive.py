@@ -87,11 +87,6 @@ while True:
         print("Saving mosaic image to '%s' ..." % savepath)
         cv2.imwrite(savepath, mosaic.astype(np.uint8))
         break
-    else:
-        try:
-            print("key pressed = %d" % (cv2.waitKey(1) & 0xFF))
-        except Exception:
-            import ipdb; ipdb.set_trace()
 
     # get current position of trackbar
     gui_scale = cv2.getTrackbarPos(slider_name, window_name)

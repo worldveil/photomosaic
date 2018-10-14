@@ -52,7 +52,7 @@ parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, 
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
 parser.add_argument("--fps", dest='fps', type=float, default=30.0, help="Frames per second to render") 
-parser.add_argument("--seconds", dest='seconds', type=float, default=-1, help="Only mosaic N seconds from start of video") 
+parser.add_argument("--seconds", dest='seconds', type=float, default=-1, help="Only mosaic first N seconds of video") 
 
 
 args = parser.parse_args()

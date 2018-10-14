@@ -1,1 +1,1 @@
-docker build -t emoji-conda -f Dockerfile.cpu .
+docker build -t mosaic-conda -f Dockerfile.cpu .

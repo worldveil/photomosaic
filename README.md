@@ -9,6 +9,8 @@ Ensure you have installed:
 * `Docker`
 * `XQuartz` (version 2.7.5 or higher) if you'd like to run the `interactive.py` OpenCV GUI explorer. Otherwise you don't need it.
 
+For `XQuartz`, [turn on the Remote setting](https://blogs.oracle.com/oraclewebcentersuite/running-gui-applications-on-native-docker-containers-for-mac), and quit and restart `XQuartz` (!).
+
 I've only tested this on my Mac OS X, but since it's Dockerized it should run anywhere Docker does!
 
 Next, build the Docker images and run a container:
