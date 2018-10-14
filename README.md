@@ -2,7 +2,9 @@
 
 Creating photomosiac images. 
 
-<img src="media/readme/beach-mosiac-scale-8.jpg" height="500">
+<p align="center">
+    <img src="media/readme/beach-mosiac-scale-8.jpg" height="500">
+</p>
 
 ## What does that mean?
 
