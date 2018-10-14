@@ -1,5 +1,6 @@
 import time
 import traceback
+import random
 
 import numpy as np
 
@@ -13,6 +14,7 @@ def mosiacify(
         verbose=0,
         use_stabilization=False,
         stabilization_threshold=0.95,
+        randomness=0.0,
     ):
     try:
         rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
@@ -41,11 +43,15 @@ def mosiacify(
             closest_tile = tile_images[idx]
             
             # write into mosaic
-            if use_stabilization:
-                if dist < last_dist[x, y] * stabilization_threshold:
-                    mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
+            if random.random() < randomness:
+                # pick a random tile!
+                mosaic[x : x + tile_h, y : y + tile_w] = random.choice(tile_images)
             else:
-                mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
+                if use_stabilization:
+                    if dist < last_dist[x, y] * stabilization_threshold:
+                        mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
+                else:
+                    mosaic[x : x + tile_h, y : y + tile_w] = closest_tile
 
             # set new last dist
             if use_stabilization:

@@ -87,7 +87,11 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 
 ### 3) Exploring mosaic scales
 
-On a single frame, play around with different scales (sizes) and see which one looks best. 
+Not sure which scale will look best? Want to play around with some different settings? Run this. 
+
+Then just press the `s` key and you'll save the selected scale to disk!
+
+Alternatively, press `ESC` to exit the window without saving. 
 
 ```bash
 $ python interactive.py \
@@ -109,6 +113,8 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 
 ### 4) Create a GIF from a series of mosaics at varying tile scales
 
+This will create a series of mosaics for a range of scales and then combined them together as a GIF with a specified frames per second. You can adjust the order with `--ascending`. 
+
 ```bash
 $ python make_gif.py \
     --target "media/pics/2018-04-01 12.00.27.jpg" \
@@ -116,8 +122,21 @@ $ python make_gif.py \
     --codebook-dir "media/pics/" \
     --min-scale 5 \
     --max-scale 25 \
-    --fps 3
+    --fps 3 \
+    --ascending 0
 ```
+
+### Using `ffprobe` / `ffmpeg`
+
+A few of the routines in this project need to know parameters from the video/audio files. 
+
+FFProbe is an excellent tool for this, and the command line interface is quite powerful. I recommend [this guide](https://trac.ffmpeg.org/wiki/FFprobeTips) for getting the handle on it. 
+
+A few good resources for `ffmpeg` specifically:
+
+* [`ffmpeg` encoding course](http://slhck.info/ffmpeg-encoding-course/#/9)
+* [`ffmpeg` tutorial](https://github.com/leandromoreira/ffmpeg-libav-tutorial#chapter-0---the-infamous-hello-world)
+* [Digital video introduction](https://github.com/leandromoreira/digital_video_introduction)
 
 ### Emojis
 

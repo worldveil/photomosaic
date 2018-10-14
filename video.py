@@ -48,6 +48,7 @@ parser.add_argument("--scale", dest='scale', type=int, required=True, help="How 
 parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Final name for the video, will add scale in name for %%d")
 
 # optional / has default
+parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
 parser.add_argument("--fps", dest='fps', type=float, default=30.0, help="Frames per second to render") 
@@ -90,7 +91,6 @@ print("Calculating number of frames...")
 timings = []
 frame_count = 0
 num_frames = calculate_framecount(args.target)
-a_frame = None
 
 with tqdm(desc='Encoding:', total=num_frames) as pbar:
     while cap.isOpened():
@@ -121,9 +121,9 @@ with tqdm(desc='Encoding:', total=num_frames) as pbar:
             out = cv2.VideoWriter(
                 video_only_mosaic_video_savepath,
                 fourcc, args.fps, write_shape, True)
-            a_frame = frame
             
         elif not ret or frame is None:
+            # we're done!
             break
 
         try:
@@ -132,7 +132,8 @@ with tqdm(desc='Encoding:', total=num_frames) as pbar:
                 frame, height, width,
                 tile_index, tile_images,
                 use_stabilization=True,
-                stabilization_threshold=0.9)
+                stabilization_threshold=0.9,
+                randomness=args.randomness)
         
             # convert to unsigned 8bit int
             to_write = mosaic.astype(np.uint8)
@@ -143,8 +144,7 @@ with tqdm(desc='Encoding:', total=num_frames) as pbar:
                 out.write(to_write)
 
         except Exception as e:
-            print("Error writing frame!")
-            print(e)
+            print("Error writing frame:", e)
             break
 
         # record timing

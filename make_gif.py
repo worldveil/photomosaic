@@ -36,6 +36,7 @@ parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=
     help="Downsize the image by this much before vectorizing")
 
 # optional / has default
+parser.add_argument("--ascending", dest='ascending', type=int, default=1, help="1 for ascending, 0 for descending order of scales")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
 
@@ -75,7 +76,8 @@ savepath = args.savepath % (
     os.path.basename(args.target), args.min_scale, args.max_scale)
 create_gif_from_images(
     img_paths, savepath, 
-    fps=args.fps, fuzz=args.fuzz)
+    fps=args.fps, fuzz=args.fuzz, 
+    ascending=bool(args.ascending))
 
 # remove temp directory 
 # shutil.rmtree(tmp_dir)

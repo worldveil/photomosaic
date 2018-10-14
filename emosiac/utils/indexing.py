@@ -26,6 +26,7 @@ def index_at_multiple_scales(
         precompute_target=None, 
         use_stabilization=True,
         stabilization_threshold=0.85,
+        randomness=0.0,
     ):
     scale2index = {}
     scale2mosaic = {}
@@ -38,7 +39,7 @@ def index_at_multiple_scales(
             print("Indexing scale=%d..." % scale)
             h, w = compute_hw(scale, height_aspect, width_aspect)
             tile_index, _, tile_images = index_images(
-                paths='%s/2016-03*.jpg' % codebook_dir,
+                paths='%s/*.jpg' % codebook_dir,
                 aspect_ratio=aspect_ratio, 
                 height=h, width=w,
                 vectorization_scaling_factor=vectorization_factor
@@ -53,7 +54,8 @@ def index_at_multiple_scales(
                 mosaic, _, _ = mosiacify(
                     precompute_target, h, w, tile_index, tile_images, 
                     use_stabilization=use_stabilization,
-                    stabilization_threshold=stabilization_threshold)
+                    stabilization_threshold=stabilization_threshold,
+                    randomness=randomness)
                 scale2mosaic[scale] = mosaic
 
             count += 1

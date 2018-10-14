@@ -14,9 +14,9 @@ from emosiac import mosiacify
 Example usage:
 
     $ python interactive.py \
-        --codebook-dir images/pics/ \
-        --target "images/pics/2018-04-01 12.00.27.jpg" \
-        --savepath "images/output/%s-%d.jpg" \
+        --codebook-dir media/pics/ \
+        --target "media/pics/2018-04-01 12.00.27.jpg" \
+        --savepath "media/output/%s-%d.jpg" \
         --min-scale 12 \
         --max-scale 14
 """
@@ -28,6 +28,7 @@ parser.add_argument("--target", dest='target', type=str, required=True, help="Im
 parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Where to save image to. Scale/filename is used in formatting.")
 
 # optional
+parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--min-scale", dest='min_scale', type=int, required=False, help="Minimum scale to index")
 parser.add_argument("--max-scale", dest='max_scale', type=int, required=False, help="Maximum scale to index")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
@@ -39,9 +40,9 @@ parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=
 args = parser.parse_args()
 
 # basic setup
-print("Images=%s, target=%s, min_scale=%d, max_scale=%d, aspect_ratio=%.4f, vectorization=%d" % (
+print("Images=%s, target=%s, min_scale=%d, max_scale=%d, aspect_ratio=%.4f, vectorization=%d, randomness=%.2f" % (
     args.codebook_dir, args.target, args.min_scale, args.max_scale, 
-    args.height_aspect / args.width_aspect, args.vectorization_factor))
+    args.height_aspect / args.width_aspect, args.vectorization_factor, args.randomness))
 
 aspect_ratio = args.height_aspect / float(args.width_aspect)
 
@@ -58,7 +59,8 @@ scale2index, scale2mosaic = index_at_multiple_scales(
     vectorization_factor=args.vectorization_factor,
     precompute_target=target_image,
     use_stabilization=True,
-    stabilization_threshold=0.85
+    stabilization_threshold=0.85,
+    randomness=args.randomness,
 )
 
 # Create our window

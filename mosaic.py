@@ -30,6 +30,7 @@ parser.add_argument("--target", dest='target', type=str, required=True, help="Im
 parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
 
 # optional
+parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
@@ -39,9 +40,9 @@ parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=
 args = parser.parse_args()
 
 print("=== Creating Mosaic Image ===")
-print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d" % (
+print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d, randomness=%.2f" % (
     args.codebook_dir, args.target, args.scale, args.height_aspect / args.width_aspect, 
-    args.vectorization_factor))
+    args.vectorization_factor, args.randomness))
 
 # sizing for mosaic tiles
 height, width = int(args.height_aspect * args.scale), int(args.width_aspect * args.scale)
@@ -61,8 +62,9 @@ tile_index, _, tile_images = index_images(
 
 # transform!
 mosaic, _, _ = mosiacify(
-    target_image, height, width, 
-    tile_index, tile_images)
+    target_image, height, width,
+    tile_index, tile_images,
+    randomness=args.randomness)
 
 try:
     plt.figure(figsize = (64, 30))
