@@ -128,11 +128,11 @@ $ python make_gif.py \
 
 ### Using `ffprobe` / `ffmpeg`
 
-A few of the routines in this project need to know parameters from the video/audio files. 
+A few of the routines in this project make use of parameters from the video/audio files. I often call the command line utilities directly by spinning up a separate process, which is a little icky, but gets the job done.
 
 FFProbe is an excellent tool for this, and the command line interface is quite powerful. I recommend [this guide](https://trac.ffmpeg.org/wiki/FFprobeTips) for getting the handle on it. 
 
-A few good resources for `ffmpeg` specifically:
+Similarly, `ffmpeg` makes splicing audio/video streams and recombining them easy. A few good resources for `ffmpeg` specifically:
 
 * [`ffmpeg` encoding course](http://slhck.info/ffmpeg-encoding-course/#/9)
 * [`ffmpeg` tutorial](https://github.com/leandromoreira/ffmpeg-libav-tutorial#chapter-0---the-infamous-hello-world)
