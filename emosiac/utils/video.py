@@ -103,6 +103,21 @@ def probe_fps(mediapath, verbose=0):
     except ValueError:
         return None
 
+def probe_rotation(mediapath, verbose=0):
+    cmd = "ffprobe -v error -show_entries stream_tags=rotate -of default=noprint_wrappers=1:nokey=1 %(path)s" % dict(
+        path=mediapath,
+    )
+    if verbose:
+        print(cmd)
+    process = subprocess.Popen(cmd.split(' '), shell=False, 
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process.wait()
+    out, _ = process.communicate()
+    try:
+        return int(out.strip())
+    except ValueError:
+        return 0
+
 def calculate_framecount(videopath, verbose=1):
     return int(math.ceil(probe_length(videopath) * probe_fps(videopath)))
 
