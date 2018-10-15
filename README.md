@@ -72,7 +72,7 @@ Reconstruct an image using a set of other images, downsized and used as tiles.
 $ python mosaic.py \
     --target "media/example/beach.jpg" \
     --savepath "media/output/%s-mosiac-scale-%d.jpg" \
-    --codebook-dir media/pics/ \
+    --codebook-dir "your/codebook/tiles/directory/" \
     --scale 8 \
     --height-aspect 4 \
     --width-aspect 3 \
@@ -81,6 +81,7 @@ $ python mosaic.py \
 
 Arguments:
 
+* `--savepath`: where to save it. %s is the original filename and %d will be the scale
 * `--target`: the image we're trying to reconstruct from other tile images
 * `--codebook-dir`: the images we'll create tiles out of (codebook)
 * `--scale`: how large/small to make the tiles. Multipler on the aspect ratio.
@@ -101,13 +102,15 @@ Do the same, but with every frame of a video!
 
 ```bash
 $ python video.py \
-    --target "media/example/cabo_sailing.mov" \
+    --target "path/to/your/video.mov" \
     --savepath "media/output/%s-at-scale-%d.mp4" \
-    --codebook-dir "media/pics/" \
+    --codebook-dir "your/codebook/tiles/directory/" \
     --scale 10 \
     --height-aspect 4 \
     --width-aspect 3
 ```
+
+Only use `*.mp4` for the savepath output, that's all I support for now.
 
 Arguments:
 
@@ -138,9 +141,9 @@ Alternatively, press `ESC` to exit the window without saving.
 
 ```bash
 $ python interactive.py \
-    --target "media/example/arizona.jpg" \
+    --target "path/to/your/pic.jpg" \
     --savepath "media/output/interactive-%s-at-scale-%d.jpg" \
-    --codebook-dir "media/pics/" \
+    --codebook-dir "your/codebook/directory/" \
     --min-scale 1 \
     --max-scale 12
 ```
@@ -151,13 +154,14 @@ Arguments:
 * `--codebook-dir`: the images we'll create tiles out of (codebook)
 * `--min-scale`: start at this scale value (int)
 * `--max-scale`: let user increase scale up to this value (int)
+* `--savepath`: where to save it. %s is the original filename and %d will be the scale
 
 You can adjust aspect ratio here too, but those and more are optional arguments. 
 
 Example:
 
 <p align="center">
-    <img src="media/readme/xxxxx.jpg" height="300">
+    <img src="media/readme/interactive.jpg" height="300">
 </p>
 
 ### 4) Create a GIF from a series of mosaics at varying tile scales
@@ -166,22 +170,37 @@ This will create a series of mosaics for a range of scales and then combined the
 
 ```bash
 $ python make_gif.py \
-    --target "media/pics/2018-04-01 12.00.27.jpg" \
+    --target "path/to/pic.jpg" \
     --savepath "media/output/%s-from-%d-to-%d.gif" \
-    --codebook-dir "media/pics/" \
+    --codebook-dir "your/codebook/directory/" \
     --min-scale 5 \
     --max-scale 25 \
     --fps 3 \
     --ascending 0
 ```
 
+If you pick a large range of scales, expect to wait a half and hour or so, depending on your machine. 
+
 Note that the first time you run this on a container you might see a `Imageio: 'ffmpeg-linux64-v3.3.1' was not found on your computer; downloading it now.` message, that's normal.
 
 Example:
 
 <p align="center">
-    <img src="media/readme/xxxxx.jpg" height="300">
+    <img src="media/readme/small.gif">
 </p>
+
+#### Optimizing GIF file size
+
+If you simply run the above, you might get a 200 MB GIF file, which is absurd. The easiest way to remedy this is with a tool like `gifsicle`.
+
+Here's what I'd suggest:
+
+```bash
+$ brew install gifsicle
+$ gifsicle -O3 --resize-height 400 --colors 256 < your/gigantic.gif  > totally/reasonable/sized.gif
+```
+
+For example, I reduced a 130 MB GIF to 2 MB one using that command. 
 
 ## Other settings
 
