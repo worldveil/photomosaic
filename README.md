@@ -3,7 +3,7 @@
 Creating photomosiac images & videos. 
 
 <p align="center">
-    <img src="media/readme/side-by-side.jpg" height="500">
+    <img src="media/readme/side-by-side.jpg">
 </p>
 
 ## What does that mean?
