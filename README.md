@@ -1,9 +1,9 @@
 # photomosiac
 
-Creating photomosiac images. 
+Creating photomosiac images & videos. 
 
 <p align="center">
-    <img src="media/readme/beach-mosiac-scale-8.jpg" height="500">
+    <img src="media/readme/side-by-side.jpg" height="500">
 </p>
 
 ## What does that mean?
@@ -18,7 +18,7 @@ except instead of using physical tiles, you can use your photo collection, emoji
 
 Take a target image, say, a family photo. You can recreate that target image as a mosaic using a "codebook" of other images as tiles. If you intelligently search through and pick the best "codebook" image in your tileset, you can create arbitrarily good recreations of your target image. 
 
-This project cuts up the target image into tiles (you control the tile size with `scale` parameter), and for each tile patch, uses the L2 similarity metric (with an ultrafast lookup using Facebook's [faiss]() library) to find the closest codebook tile image to replace it with.
+This project cuts up the target image into tiles (you control the tile size with `scale` parameter), and for each tile patch, uses the L2 similarity metric (with an ultrafast lookup using Facebook's [faiss](https://github.com/facebookresearch/faiss) library) to find the closest codebook tile image to replace it with.
 
 You can even do this for each frame in a video and create videomosaics (see `video.py`). 
 
@@ -84,6 +84,12 @@ Arguments:
 * `--width-aspect`: width aspect
 * `--vectorization-factor`: if we downsize the feature vector before querying (generally don't need to adjust this)
 
+Example:
+
+<p align="center">
+    <img src="media/readme/beach-mosaic-scale-8.jpg" height="300">
+</p>
+
 
 ### 2) Creating mosaic videos
 
@@ -112,6 +118,11 @@ Arguments:
 
 You can adjust aspect ratio here too, but those and more are optional arguments.  
 
+Example:
+
+<p align="center">
+    <img src="media/readme/xxxxx.jpg" height="300">
+</p>
 
 ### 3) Exploring mosaic scales
 
@@ -139,6 +150,12 @@ Arguments:
 
 You can adjust aspect ratio here too, but those and more are optional arguments. 
 
+Example:
+
+<p align="center">
+    <img src="media/readme/xxxxx.jpg" height="300">
+</p>
+
 ### 4) Create a GIF from a series of mosaics at varying tile scales
 
 This will create a series of mosaics for a range of scales and then combined them together as a GIF with a specified frames per second. You can adjust the order with `--ascending`. 
@@ -155,6 +172,12 @@ $ python make_gif.py \
 ```
 
 Note that the first time you run this on a container you might see a `Imageio: 'ffmpeg-linux64-v3.3.1' was not found on your computer; downloading it now.` message, that's normal.
+
+Example:
+
+<p align="center">
+    <img src="media/readme/xxxxx.jpg" height="300">
+</p>
 
 ### Using `ffprobe` / `ffmpeg`
 
