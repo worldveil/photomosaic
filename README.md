@@ -68,6 +68,10 @@ If you add or delete even a single file from the folder, photomosaic is smart en
 
 Reconstruct an image using a set of other images, downsized and used as tiles. 
 
+<p align="center">
+    <img src="media/readme/beach-mosaic-scale-8-small.jpg" height="300">
+</p>
+
 ```bash
 $ python mosaic.py \
     --target "media/example/beach.jpg" \
@@ -89,16 +93,16 @@ Arguments:
 * `--width-aspect`: width aspect
 * `--vectorization-factor`: if we downsize the feature vector before querying (generally don't need to adjust this)
 
-Example:
-
-<p align="center">
-    <img src="media/readme/beach-mosaic-scale-8-small.jpg" height="300">
-</p>
-
 
 ### 2) Creating mosaic videos
 
 Do the same, but with every frame of a video!
+
+Example (Tipper concert):
+
+<p align="center">
+    <img src="media/readme/tipper-video.gif">
+</p>
 
 ```bash
 $ python video.py \
@@ -125,12 +129,6 @@ Arguments:
 
 You can adjust aspect ratio here too, but those and more are optional arguments.  
 
-Example:
-
-<p align="center">
-    <img src="media/readme/tipper-video.gif">
-</p>
-
 ### 3) Exploring mosaic scales interactively
 
 Not sure which scale will look best? Want to play around with some different settings? Run this. 
@@ -138,6 +136,10 @@ Not sure which scale will look best? Want to play around with some different set
 Then just press the `s` key and you'll save the selected scale to disk!
 
 Alternatively, press `ESC` to exit the window without saving. 
+
+<p align="center">
+    <img src="media/readme/interactive.png" height="400">
+</p>
 
 ```bash
 $ python interactive.py \
@@ -158,15 +160,13 @@ Arguments:
 
 You can adjust aspect ratio here too, but those and more are optional arguments. 
 
-Example:
-
-<p align="center">
-    <img src="media/readme/interactive.png" height="400">
-</p>
-
 ### 4) Create a GIF from a series of mosaics at varying tile scales
 
 This will create a series of mosaics for a range of scales and then combined them together as a GIF with a specified frames per second. You can adjust the order with `--ascending`. 
+
+<p align="center">
+    <img src="media/readme/small.gif">
+</p>
 
 ```bash
 $ python make_gif.py \
@@ -182,12 +182,6 @@ $ python make_gif.py \
 If you pick a large range of scales, expect to wait a half and hour or so, depending on your machine. 
 
 Note that the first time you run this on a container you might see a `Imageio: 'ffmpeg-linux64-v3.3.1' was not found on your computer; downloading it now.` message, that's normal.
-
-Example:
-
-<p align="center">
-    <img src="media/readme/small.gif">
-</p>
 
 #### Optimizing GIF file size
 
