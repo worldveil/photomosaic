@@ -87,7 +87,7 @@ Arguments:
 Example:
 
 <p align="center">
-    <img src="media/readme/beach-mosaic-scale-8-small.jpg" height="300">
+    <img src="media/readme/beach-mosiac-scale-8-small.jpg" height="300">
 </p>
 
 
