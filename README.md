@@ -161,7 +161,7 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 Example:
 
 <p align="center">
-    <img src="media/readme/interactive.png" height="300">
+    <img src="media/readme/interactive.png" height="400">
 </p>
 
 ### 4) Create a GIF from a series of mosaics at varying tile scales
