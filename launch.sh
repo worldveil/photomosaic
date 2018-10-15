@@ -8,11 +8,11 @@ xhost + $IP
 # start a Docker container which will die on exit
 # this will run an IPython server which you can access in
 # your browser at localhost:$PORT
-docker run  \
+docker run \
 	--rm \
 	--name $CONTAINER_NAME \
 	--mount type=bind,source="$(pwd)",target=/project \
-	-p $PORT:$PORT/tcp \
+	-p "$PORT:$PORT/tcp" \
 	-e "DISPLAY=$IP:0" \
 	mosaic-conda:latest \
 	jupyter notebook \
