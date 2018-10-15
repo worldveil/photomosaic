@@ -6,7 +6,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-from emosiac.utils.fs import ensure_directory
+from emosaic.utils.fs import ensure_directory
 
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
 base_url = 'https://emojiisland.com/pages/free-download-emoji-icons-png'

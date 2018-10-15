@@ -7,11 +7,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-from emosiac import mosiacify
-from emosiac.utils.indexing import index_images
-from emosiac.utils.video import extract_audio, add_audio_to_video, calculate_framecount, probe_rotation
-from emosiac.utils.misc import is_running_jupyter
-from emosiac.utils.image import rotate_bound
+from emosaic import mosaicify
+from emosaic.utils.indexing import index_images
+from emosaic.utils.video import extract_audio, add_audio_to_video, calculate_framecount, probe_rotation
+from emosaic.utils.misc import is_running_jupyter
+from emosaic.utils.image import rotate_bound
 
 if is_running_jupyter():
     from tqdm import tqdm_notebook as tqdm
@@ -131,7 +131,7 @@ with tqdm(desc='Encoding:', total=num_frames) as pbar:
 
         try:
             # encode image using codebook
-            mosaic, _, _ = mosiacify(
+            mosaic, _, _ = mosaicify(
                 frame, height, width,
                 tile_index, tile_images,
                 use_stabilization=True,

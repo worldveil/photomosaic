@@ -7,8 +7,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-from emosiac.utils.indexing import index_at_multiple_scales
-from emosiac import mosiacify
+from emosaic.utils.indexing import index_at_multiple_scales
+from emosaic import mosaicify
 
 """
 Example usage:

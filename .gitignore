@@ -2,6 +2,6 @@
 .DS_Store
 media/
 .pytest_cache/
-emosiac/tests/output/*
+emosaic/tests/output/*
 .ipynb_checkpoints/
 cache/*

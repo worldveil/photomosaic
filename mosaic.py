@@ -5,8 +5,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-from emosiac.utils.indexing import index_images
-from emosiac import mosiacify
+from emosaic.utils.indexing import index_images
+from emosaic import mosaicify
 
 
 """
@@ -14,7 +14,7 @@ Example usage:
 
     $ python mosaic.py \
         --target "media/example/beach.jpg" \
-        --savepath "media/output/%s-mosiac-scale-%d.jpg" \
+        --savepath "media/output/%s-mosaic-scale-%d.jpg" \
         --codebook-dir media/pics/ \
         --scale 1 \
         --height-aspect 4 \
@@ -62,7 +62,7 @@ tile_index, _, tile_images = index_images(
 )
 
 # transform!
-mosaic, _, _ = mosiacify(
+mosaic, _, _ = mosaicify(
     target_image, height, width,
     tile_index, tile_images,
     randomness=args.randomness)

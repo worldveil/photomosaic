@@ -6,10 +6,10 @@ import shutil
 import cv2
 import moviepy.editor as mpy
 
-from emosiac.utils.gif import create_gif_from_images
-from emosiac.utils.misc import ensure_directory
-from emosiac.utils.indexing import index_at_multiple_scales
-from emosiac.utils.misc import is_running_jupyter
+from emosaic.utils.gif import create_gif_from_images
+from emosaic.utils.misc import ensure_directory
+from emosaic.utils.indexing import index_at_multiple_scales
+from emosaic.utils.misc import is_running_jupyter
 
 if is_running_jupyter():
     from tqdm import tqdm_notebook as tqdm

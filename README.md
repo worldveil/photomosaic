@@ -1,12 +1,12 @@
-# photomosiac
+# photomosaic
 
-Creating photomosiac images & videos. 
+Creating photomosaic images & videos. 
 
 <p align="center">
     <img src="media/readme/side-by-side.jpg">
 </p>
 
-## What does that mean?
+## How does it work?
 
 We're doing the digital equivilent of a very old technique - creating mosaics:
 
@@ -54,7 +54,7 @@ sh enter.sh
 
 Finally, and most importantly, get together some photos and videos you'd like to either create images from (use as mosaic tiles) or create mosaics of (turn your photos/videos into mosaics). I took my iPhone photos/videos for the last few years and threw them all in a folder, and you can see some of the cool results below.
 
-## Photomosiac Scripts
+## photomosaic Scripts
 
 Note that the default setting for all of these scripts are to use caching, which means once you've indexed a particular folder of photos at a certain scale (read: tile size), you'll never need to do it again. 
 
@@ -71,7 +71,7 @@ Reconstruct an image using a set of other images, downsized and used as tiles.
 ```bash
 $ python mosaic.py \
     --target "media/example/beach.jpg" \
-    --savepath "media/output/%s-mosiac-scale-%d.jpg" \
+    --savepath "media/output/%s-mosaic-scale-%d.jpg" \
     --codebook-dir "your/codebook/tiles/directory/" \
     --scale 8 \
     --height-aspect 4 \
@@ -92,7 +92,7 @@ Arguments:
 Example:
 
 <p align="center">
-    <img src="media/readme/beach-mosiac-scale-8-small.jpg" height="300">
+    <img src="media/readme/beach-mosaic-scale-8-small.jpg" height="300">
 </p>
 
 
@@ -208,7 +208,7 @@ Here are a few other settings that allow you to tweak the visual output.
 
 ### 1) Randomness (`--randomness`)
 
-If you'd like to bring a little chaos into your photomosiacs, use the randomness parameter. 
+If you'd like to bring a little chaos into your photomosaics, use the randomness parameter. 
 
 It's a float in the range `[0, 1)` that is the probability a given tile will be filled in, not with the closest tile in the codebook, but rather a completely random one. 
 
