@@ -48,6 +48,7 @@ parser.add_argument("--scale", dest='scale', type=int, required=True, help="How 
 parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Final name for the video, will add scale in name for %%d")
 
 # optional / has default
+parser.add_argument("--stabilization-threshold", dest='stabilization_threshold', type=float, default=0.9, help="Fraction of previous tile best distance")
 parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
@@ -133,7 +134,7 @@ with tqdm(desc='Encoding:', total=num_frames) as pbar:
                 frame, height, width,
                 tile_index, tile_images,
                 use_stabilization=True,
-                stabilization_threshold=0.9,
+                stabilization_threshold=args.stabilization_threshold,
                 randomness=args.randomness)
         
             # convert to unsigned 8bit int

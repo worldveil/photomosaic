@@ -179,6 +179,32 @@ Example:
     <img src="media/readme/xxxxx.jpg" height="300">
 </p>
 
+### Other settings
+
+Here are a few other settings that allow you to tweak the visual output. 
+
+#### Randomness (`--randomness`)
+
+If you'd like to bring a little chaos into your photomosiacs, use the randomness parameter. 
+
+It's a float in the range `[0, 1)` that is the probability a given tile will be filled in, not with the closest tile in the codebook, but rather a completely random one. 
+
+Example (at 0.05):
+
+<p align="center">
+    <img src="media/readme/randomness.jpg">
+</p>
+
+#### Stabilization for Videomosaics (`--stabilization-threshold`)
+
+Videomosaics are just a repeated application per frame of the photomosaic functionality. Therefore, tiny changes from frame to frame might cause the same object in the video to be represented with different tiles. This isn't terrible but it gives us less visual stability because it's always changing. 
+
+`--stabilization-threshold` is a float which represents a fraction of the previous distance for that tile. We only replace the tile in that slot if:
+
+    `current closest tile's distance` < `--stabilization-threshold` * `last frame's distance`
+
+Otherwise, we simply keep the tile the same for that frame. This is a crude stabilitiy heuristic, and in the future I could certainly do something smarter. 
+
 ### Using `ffprobe` / `ffmpeg`
 
 A few of the routines in this project make use of parameters from the video/audio files. I often call the command line utilities directly by spinning up a separate process, which is a little icky, but gets the job done.
