@@ -58,6 +58,10 @@ Finally, and most importantly, get together some photos and videos you'd like to
 
 Note that the default setting for all of these scripts are to use caching, which means once you've indexed a particular folder of photos at a certain scale (read: tile size), you'll never need to do it again. 
 
+<p align="center">
+    <img src="media/readme/caching.png" height="300">
+</p>
+
 If you add or delete even a single file from the folder, photomosaic is smart enough to know to reindex. Cached index pickle files are stored by default in the `cache` folder.
 
 ### 1) Creating mosaics from an image
@@ -179,11 +183,11 @@ Example:
     <img src="media/readme/xxxxx.jpg" height="300">
 </p>
 
-### Other settings
+## Other settings
 
 Here are a few other settings that allow you to tweak the visual output. 
 
-#### Randomness (`--randomness`)
+### 1) Randomness (`--randomness`)
 
 If you'd like to bring a little chaos into your photomosiacs, use the randomness parameter. 
 
@@ -192,10 +196,10 @@ It's a float in the range `[0, 1)` that is the probability a given tile will be 
 Example (at 0.05):
 
 <p align="center">
-    <img src="media/readme/randomness.jpg">
+    <img src="media/readme/randomness.jpg" height="400">
 </p>
 
-#### Stabilization for Videomosaics (`--stabilization-threshold`)
+### 2) Stabilization for Videomosaics (`--stabilization-threshold`)
 
 Videomosaics are just a repeated application per frame of the photomosaic functionality. Therefore, tiny changes from frame to frame might cause the same object in the video to be represented with different tiles. This isn't terrible but it gives us less visual stability because it's always changing. 
 
