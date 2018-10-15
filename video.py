@@ -37,7 +37,8 @@ Or from within ipython:
         --scale 8 \
         --height-aspect 4 \
         --width-aspect 3 \
-        --savepath "images/vids/fireworks-%d.mp4"
+        --savepath "images/vids/fireworks-%d.mp4" \
+        --stabilization-threshold 0.95
 """
 parser = argparse.ArgumentParser()
 
