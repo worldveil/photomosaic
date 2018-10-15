@@ -54,7 +54,7 @@ sh enter.sh
 
 Finally, and most importantly, get together some photos and videos you'd like to either create images from (use as mosaic tiles) or create mosaics of (turn your photos/videos into mosaics). I took my iPhone photos/videos for the last few years and threw them all in a folder, and you can see some of the cool results below.
 
-## photomosaic Scripts
+## Photomosaic Scripts
 
 Note that the default setting for all of these scripts are to use caching, which means once you've indexed a particular folder of photos at a certain scale (read: tile size), you'll never need to do it again. 
 
@@ -131,7 +131,7 @@ Example:
     <img src="media/readme/xxxxx.jpg" height="300">
 </p>
 
-### 3) Exploring mosaic scales
+### 3) Exploring mosaic scales interactively
 
 Not sure which scale will look best? Want to play around with some different settings? Run this. 
 
@@ -161,7 +161,7 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 Example:
 
 <p align="center">
-    <img src="media/readme/interactive.jpg" height="300">
+    <img src="media/readme/interactive.png" height="300">
 </p>
 
 ### 4) Create a GIF from a series of mosaics at varying tile scales
