@@ -42,7 +42,9 @@ RUN apt-get update -y && \
         swig \
         git \
         python-pip \
-        tree
+        tree \
+        gifsicle \
+        imagemagick
 
 COPY requirements.txt /home/requirements.txt
 RUN pip install -r /home/requirements.txt

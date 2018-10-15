@@ -128,7 +128,7 @@ You can adjust aspect ratio here too, but those and more are optional arguments.
 Example:
 
 <p align="center">
-    <img src="media/readme/xxxxx.jpg" height="300">
+    <img src="media/readme/tipper-video.gif">
 </p>
 
 ### 3) Exploring mosaic scales interactively
