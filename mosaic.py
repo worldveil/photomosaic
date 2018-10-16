@@ -19,7 +19,8 @@ Example usage:
         --scale 1 \
         --height-aspect 4 \
         --width-aspect 3 \
-        --vectorization-factor 1
+        --vectorization-factor 1 \
+        --opacity 0.0
 """
 parser = argparse.ArgumentParser()
 
@@ -30,6 +31,7 @@ parser.add_argument("--target", dest='target', type=str, required=True, help="Im
 parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
 
 # optional
+parser.add_argument("--opacity", dest='opacity', type=float, default=0.0, help="Opacity of the original photo")
 parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
@@ -65,7 +67,8 @@ tile_index, _, tile_images = index_images(
 mosaic, _, _ = mosaicify(
     target_image, height, width,
     tile_index, tile_images,
-    randomness=args.randomness)
+    randomness=args.randomness,
+    opacity=args.opacity)
 
 try:
     plt.figure(figsize = (64, 30))

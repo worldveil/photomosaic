@@ -3,6 +3,7 @@ import traceback
 import random
 
 import numpy as np
+import cv2
 
 from emosaic.utils.image import divide_image_rectangularly, to_vector
 
@@ -15,6 +16,7 @@ def mosaicify(
         use_stabilization=False,
         stabilization_threshold=0.95,
         randomness=0.0,
+        opacity=0.0
     ):
     try:
         rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
@@ -60,12 +62,18 @@ def mosaicify(
             # record the performance
             elapsed = time.time() - starttime
             timings.append(elapsed)
+
+        # should we adjust opacity? 
+        if opacity > 0:
+            mosaic = cv2.addWeighted(target_image, opacity, mosaic.astype(np.uint8), 1 - opacity, 0)
+        else:
+            mosaic = mosaic.astype(np.uint8)
             
         # show some results
         arr = np.array(timings)
         if verbose:
             print("Timings: mean=%.5f, stddev=%.5f" % (arr.mean(), arr.std()))
-        return mosaic.astype(np.uint8), rect_starts, arr
+        return mosaic, rect_starts, arr
 
     except Exception:
         print(traceback.format_exc())

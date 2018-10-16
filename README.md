@@ -194,7 +194,7 @@ $ brew install gifsicle
 $ gifsicle -O3 --resize-height 400 --colors 256 < your/gigantic.gif  > totally/reasonable/sized.gif
 ```
 
-For example, I reduced a 130 MB GIF to 2 MB one using that command. 
+For example, I reduced a 130 MB GIF to 2 MB one using that command. [EZgif](https://ezgif.com) is a surprisingly good online tool for compressing GIFs with different tradeoffs, but they only support GIFs up to 100 MB in size. 
 
 ## Other settings
 
@@ -221,6 +221,25 @@ Videomosaics are just a repeated application per frame of the photomosaic functi
     `current closest tile's distance` < `--stabilization-threshold` * `last frame's distance`
 
 Otherwise, we simply keep the tile the same for that frame. This is a crude stabilitiy heuristic, and in the future I could certainly do something smarter. 
+
+### 3) Opacity
+
+Some photomosaics "cheat" a bit and just layer on a watered down version of the original image in a specified ratio along with the mosaic tiles. This is a popular enough technique I decided to include it. Simply use the `--opacity` flag:
+
+<p align="center">
+    <img src="media/readme/opacity.jpg" height="400">
+</p>
+
+```bash
+$ python mosaic.py \
+    --target "media/example/beach.jpg" \
+    --savepath "media/output/%s-mosaic-scale-%d.jpg" \
+    --codebook-dir media/pics/ \
+    --scale 13 \
+    --height-aspect 4 \
+    --width-aspect 3 \
+    --opacity 0.4
+```
 
 ### Using `ffprobe` / `ffmpeg`
 

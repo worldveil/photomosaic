@@ -1,3 +1,11 @@
 - Sometimes I'd like to change a particular image because I don't like it there or it's a boring image like a recept or an embarassing photo I'd rather not have a giant poster for all to see
 - Needs to be giant resolution to be able to zoom in
 - Could use a variation of larger squares and smaller ones somehow
+
+
+- add in by default pure 1) white, 2) black images at index time. so that backgrounds are pure and you really feel like the mosaic actually segmented and made only the objects part of the picture
+- overlay + random photos mode for families
+- could segment image where humans are and use smaller tiles in there. moving outwards from there, start increasing the scale size
+- once i get a good portrait thing going, could make images for Brian, Asiff, etc and give them to comms team to be used in next article in nytimes, etc
+
+- how to get posters printed?
