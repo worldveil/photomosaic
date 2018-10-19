@@ -44,7 +44,9 @@ RUN apt-get update -y && \
         python-pip \
         tree \
         gifsicle \
-        imagemagick
+        imagemagick \
+        libgtk-3-dev \
+        libboost-all-dev
 
 COPY requirements.txt /home/requirements.txt
 RUN pip install -r /home/requirements.txt

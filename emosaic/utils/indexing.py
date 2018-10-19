@@ -75,7 +75,8 @@ def index_images(
         vectorization_scaling_factor=1, 
         index_class=faiss.IndexFlatL2,
         verbose=1,
-        caching=True):
+        caching=True,
+        use_detect_faces=False):
     """
     @param: paths (list of Strings OR glob pattern string) image paths to load
     @param: aspect_ratio (float) height / width
@@ -108,7 +109,8 @@ def index_images(
                 width=width,
                 nchannels=nchannels,
                 index_class=index_class,
-                dimensions=vectorization_dimensionality)
+                dimensions=vectorization_dimensionality,
+                detect_faces=use_detect_faces)
             cached = cache.load()
             if cached is not None:
                 print("Found cached index, reading from disk...")
@@ -117,7 +119,7 @@ def index_images(
                 print("No cached index found, creating from scratch...")
 
         # nothing cached, let's index
-        path_jobs = [(p, height, width, nchannels, aspect_ratio) for p in paths]  #[:200]
+        path_jobs = [(p, height, width, nchannels, aspect_ratio, use_detect_faces) for p in paths]  #[:200]
         pool = ThreadPool(5)
         results = pool.map(load_and_vectorize_image, path_jobs)
         pool.close()
@@ -133,8 +135,16 @@ def index_images(
         vectors = []
         for image, vector in results:
             if image is not None and vector is not None:
+                if use_detect_faces and not image.faces:
+                    # if we're told to use faces, skip any images
+                    # without them
+                    continue
                 vectors.append(vector)
                 images.append(image)
+
+        if use_detect_faces:
+            print("Using only images with faces: total=%d, withfaces=%d" % (
+                len(results), len(images)))
                 
         # create matrix and index
         matrix = np.array(vectors).reshape(-1, vectorization_dimensionality)

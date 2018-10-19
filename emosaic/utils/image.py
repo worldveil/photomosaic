@@ -48,8 +48,8 @@ def load_and_vectorize_image(args):
       returns (None, None) if the aspect ratio of the image doesn't match 
       the argument aspect_ratio given
   """
-  path, h, w, c, aspect_ratio = args
-  image = Image(path)
+  path, h, w, c, aspect_ratio, use_detect_faces = args
+  image = Image(path, detect_faces=use_detect_faces)
   img = image.compute_statistics()
   if image.aspect_ratio == aspect_ratio:
     v = to_vector(img, h, w, c)

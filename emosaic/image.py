@@ -11,6 +11,7 @@ import PIL.Image as pillow
 from sklearn.cluster import KMeans
 
 from emosaic.utils.exif import get_exif_lat_lon
+from emosaic.faces import detect_faces_dlib
 
 
 class Image(object):
@@ -18,13 +19,16 @@ class Image(object):
                 path, 
                 num_dominant_colors=3, 
                 dominant_color_subsample=0.1, 
-                compute_dominant_colors=False):
+                compute_dominant_colors=False,
+                detect_faces=False):
         
         # save some useful stuff
         self.path = path
         self.dominant_color_subsample = dominant_color_subsample
         self.num_dominant_colors = num_dominant_colors
         self.compute_dominant_colors = compute_dominant_colors
+        self.detect_faces = detect_faces
+        self.faces = []
         
         # load EXIF data
         self.extract_exif_tags()
@@ -114,6 +118,9 @@ class Image(object):
         feature_vectors = feature_vectors[row_indices, :]
         kmeans = KMeans(n_clusters=self.num_dominant_colors).fit(feature_vectors)
         self.dominant_colors = kmeans.cluster_centers_
+
+    def compute_face_detections(self, img):
+        self.faces, self.percentage_face = detect_faces_dlib(img)
         
     def compute_statistics(self):
         img = self.load_image()
@@ -129,6 +136,9 @@ class Image(object):
         # compute dominant colors (a little computationally expensive)
         if self.compute_dominant_colors:
             self.compute_dominant_colors(img)
+
+        if self.detect_faces:
+            self.compute_face_detections(img)
 
         return img
 

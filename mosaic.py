@@ -19,8 +19,8 @@ Example usage:
         --scale 1 \
         --height-aspect 4 \
         --width-aspect 3 \
-        --vectorization-factor 1 \
-        --opacity 0.0
+        --opacity 0.0 \
+        --detect-faces
 """
 parser = argparse.ArgumentParser()
 
@@ -31,6 +31,7 @@ parser.add_argument("--target", dest='target', type=str, required=True, help="Im
 parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
 
 # optional
+parser.add_argument("--detect-faces", dest='detect_faces', action='store_true', default=False, help="If we should only include pictures with faces in them")
 parser.add_argument("--opacity", dest='opacity', type=float, default=0.0, help="Opacity of the original photo")
 parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
@@ -42,9 +43,9 @@ parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=
 args = parser.parse_args()
 
 print("=== Creating Mosaic Image ===")
-print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d, randomness=%.2f" % (
+print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d, randomness=%.2f, faces=%s" % (
     args.codebook_dir, args.target, args.scale, args.height_aspect / args.width_aspect, 
-    args.vectorization_factor, args.randomness))
+    args.vectorization_factor, args.randomness, args.detect_faces))
 
 # sizing for mosaic tiles
 height, width = int(args.height_aspect * args.scale), int(args.width_aspect * args.scale)
@@ -61,6 +62,7 @@ tile_index, _, tile_images = index_images(
     width=width,
     vectorization_scaling_factor=args.vectorization_factor,
     caching=True,
+    use_detect_faces=args.detect_faces,
 )
 
 # transform!

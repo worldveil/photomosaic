@@ -23,6 +23,7 @@ class MosaicCacheConfig(object):
             nchannels,
             index_class,
             dimensions,
+            detect_faces,
             cache_dir=DEFAULT_CACHE_DIR,
             cache_pattern=DEFAULT_CACHE_PATTERN):
         
@@ -33,6 +34,7 @@ class MosaicCacheConfig(object):
         self.nchannels = nchannels
         self.index_class = index_class
         self.dimensions = dimensions
+        self.detect_faces = detect_faces
         self.index = None
 
         self.paths.sort()
@@ -46,6 +48,7 @@ class MosaicCacheConfig(object):
         hash_tuple = (
             paths_tuple,
             self.height, self.width, self.nchannels,
+            self.detect_faces
         )
         return str(hash(hash_tuple))
 
