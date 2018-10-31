@@ -24,7 +24,8 @@ def download_dlib_face_weights(url=WEIGHTS_URL, savepath=WEIGHTS_PATH):
         return None
 
 def compute_centroid(points):
-    pass
+    # points = (68, 2) array
+    return points.mean(axis=0)
 
 class DlibFace(object):
     def __init__(self, opencv_rect, bb, keypoints, downsize, shape):
@@ -111,7 +112,7 @@ def detect_faces_dlib(img, weights_path=WEIGHTS_PATH, downsize=0.25, upsample_mu
         total_face_pixels += (w * h)
         
         # create & save face
-        original_shape = (resized.shape[0], resized.shape[1])
+        original_shape = (img.shape[0], img.shape[1])
         face = DlibFace(rect, bb, keypoint_coordinates, downsize, original_shape)
         faces.append(face)
 

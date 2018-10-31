@@ -277,6 +277,17 @@ Similarly, `ffmpeg` makes splicing audio/video streams and recombining them easy
 * [`ffmpeg` tutorial](https://github.com/leandromoreira/ffmpeg-libav-tutorial#chapter-0---the-infamous-hello-world)
 * [Digital video introduction](https://github.com/leandromoreira/digital_video_introduction)
 
+### ImageMagick
+
+The `convert` tool is also nice for making GIFs:
+
+```
+$ cd your/cool/folder/with/jpg/images
+$ convert -delay 5 -layers optimize *.jpg output.gif
+```
+
+then you may want to apply the gifsicle trick for compressing/resizing that GIF to make it be a reasonable size. 
+
 ### Emojis
 
 This project first started as a way to make photomosaics from emojis. That didn't turn out to be that aesthetically pleasing, but here's a few notes on it.
