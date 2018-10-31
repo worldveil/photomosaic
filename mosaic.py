@@ -16,7 +16,7 @@ Example usage:
         --target "media/example/beach.jpg" \
         --savepath "media/output/%s-mosaic-scale-%d.jpg" \
         --codebook-dir media/pics/ \
-        --scale 1 \
+        --scale 12 \
         --height-aspect 4 \
         --width-aspect 3 \
         --opacity 0.0 \
@@ -31,6 +31,8 @@ parser.add_argument("--target", dest='target', type=str, required=True, help="Im
 parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
 
 # optional
+parser.add_argument("--best-k", dest='best_k', type=int, default=1, help="Choose tile from top K best matches")
+parser.add_argument("--no-trim", dest='no_trim', action='store_true', default=False, help="If we shouldn't trim around the outside")
 parser.add_argument("--detect-faces", dest='detect_faces', action='store_true', default=False, help="If we should only include pictures with faces in them")
 parser.add_argument("--opacity", dest='opacity', type=float, default=0.0, help="Opacity of the original photo")
 parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
@@ -39,7 +41,6 @@ parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
     help="Downsize the image by this much before vectorizing")
 
-# parser.add_argument('--feature', dest='feature', action='store_true')
 args = parser.parse_args()
 
 print("=== Creating Mosaic Image ===")
@@ -65,16 +66,24 @@ tile_index, _, tile_images = index_images(
     use_detect_faces=args.detect_faces,
 )
 
+print("Using %d tile codebook images..." % len(tile_images))
+
 # transform!
-mosaic, _, _ = mosaicify(
+mosaic, rect_starts, _ = mosaicify(
     target_image, height, width,
     tile_index, tile_images,
     randomness=args.randomness,
-    opacity=args.opacity)
+    opacity=args.opacity,
+    best_k=args.best_k,
+    trim=not args.no_trim)
 
+# convert to 8 bit unsigned integers
+mosaic_img = mosaic.astype(np.uint8)
+
+# show in notebook, if running inside one
 try:
     plt.figure(figsize = (64, 30))
-    plt.imshow(mosaic[:, :, [2,1,0]].astype(np.uint8), interpolation='nearest')
+    plt.imshow(mosaic_img[:, :, [2,1,0]], interpolation='nearest')
 except:
     pass
 
@@ -82,5 +91,5 @@ except:
 filename = os.path.basename(args.target).split('.')[0]
 savepath = args.savepath % (filename, args.scale)
 print("Writing mosaic image to '%s' ..." % savepath)
-cv2.imwrite(savepath, mosaic.astype(np.uint8))
+cv2.imwrite(savepath, mosaic_img)
 

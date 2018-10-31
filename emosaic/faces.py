@@ -110,6 +110,10 @@ def detect_faces_dlib(img, weights_path=WEIGHTS_PATH, downsize=0.25, upsample_mu
         original_shape = (resized.shape[0], resized.shape[1])
         face = DlibFace(rect, bb, keypoint_coordinates, downsize, original_shape)
         faces.append(face)
+
+    # free up some memory
+    del predictor
+    del detector
         
     percentage_face = float(total_face_pixels) / total_pixels
     return faces, percentage_face

@@ -22,15 +22,17 @@ Example:
     $ run make_gif.py \
         --target "media/pics/2018-04-01 12.00.27.jpg" \
         --savepath "media/output/%s-from-%d-to-%d.gif" \
-        --codebook-dir media/pics/ \
-        --min-scale 14 \
+        --codebook-dir /pics \
+        --min-scale 1 \
         --max-scale 18 \
-        --fps 3
+        --fps 3 \
+        --detect-faces
 """
 
 parser = argparse.ArgumentParser()
 
 # required
+parser.add_argument("--detect-faces", dest='detect_faces', action='store_true', default=False, help="If we should only include pictures with faces in them")
 parser.add_argument("--codebook-dir", dest='codebook_dir', type=str, required=True, help="Source folder of images")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Video to mosaicify")
 parser.add_argument("--min-scale", dest='min_scale', type=int, required=True, help="Start scale rendering here")
@@ -60,7 +62,8 @@ scale2index, scale2mosaic = index_at_multiple_scales(
     precompute_target=cv2.imread(args.target),
     use_stabilization=True,
     stabilization_threshold=0.85,
-    caching=True
+    caching=True,
+    use_detect_faces=args.detect_faces,
 )
 
 # create a temporary diretory to save images to

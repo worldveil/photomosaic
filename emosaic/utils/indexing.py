@@ -29,6 +29,7 @@ def index_at_multiple_scales(
         stabilization_threshold=0.85,
         randomness=0.0,
         caching=True,
+        use_detect_faces=True,
     ):
     scale2index = {}
     scale2mosaic = {}
@@ -46,6 +47,7 @@ def index_at_multiple_scales(
                 height=h, width=w,
                 vectorization_scaling_factor=vectorization_factor,
                 caching=True,
+                use_detect_faces=use_detect_faces,
             )
             scale2index[scale] = (tile_index, tile_images)
 
@@ -76,7 +78,8 @@ def index_images(
         index_class=faiss.IndexFlatL2,
         verbose=1,
         caching=True,
-        use_detect_faces=False):
+        use_detect_faces=False,
+        nprocesses=4):
     """
     @param: paths (list of Strings OR glob pattern string) image paths to load
     @param: aspect_ratio (float) height / width
@@ -120,7 +123,7 @@ def index_images(
 
         # nothing cached, let's index
         path_jobs = [(p, height, width, nchannels, aspect_ratio, use_detect_faces) for p in paths]  #[:200]
-        pool = ThreadPool(5)
+        pool = ThreadPool(nprocesses)
         results = pool.map(load_and_vectorize_image, path_jobs)
         pool.close()
 
@@ -145,6 +148,10 @@ def index_images(
         if use_detect_faces:
             print("Using only images with faces: total=%d, withfaces=%d" % (
                 len(results), len(images)))
+
+            if not images:
+                print("No images contained faces :( Exiting and returning None's")
+                return None, None, None
                 
         # create matrix and index
         matrix = np.array(vectors).reshape(-1, vectorization_dimensionality)

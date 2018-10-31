@@ -222,7 +222,7 @@ Videomosaics are just a repeated application per frame of the photomosaic functi
 
 Otherwise, we simply keep the tile the same for that frame. This is a crude stabilitiy heuristic, and in the future I could certainly do something smarter. 
 
-### 3) Opacity
+### 3) Opacity (`--opacity`)
 
 Some photomosaics "cheat" a bit and just layer on a watered down version of the original image in a specified ratio along with the mosaic tiles. This is a popular enough technique I decided to include it. Simply use the `--opacity` flag:
 
@@ -240,6 +240,12 @@ $ python mosaic.py \
     --width-aspect 3 \
     --opacity 0.4
 ```
+
+### 4) Best-K (`--best-k`)
+
+You might notice that many of your photomosaics will have large regions of similar color and so a single image gets tiled over large portions of your image. If you'd like to throw in a little (sensible) randomness, instead of using the (`--randomness`) sludgehammer, you can use the `--best-k`. 
+
+At each tile, with `--best-k`, `k` top matches will be chosen from randomly, weighted roughly inversely by distance (so "closer" images are more likely). 
 
 ### Using `ffprobe` / `ffmpeg`
 
