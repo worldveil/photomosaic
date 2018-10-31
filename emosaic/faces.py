@@ -23,6 +23,9 @@ def download_dlib_face_weights(url=WEIGHTS_URL, savepath=WEIGHTS_PATH):
         print("ERROR:", e)
         return None
 
+def compute_centroid(points):
+    pass
+
 class DlibFace(object):
     def __init__(self, opencv_rect, bb, keypoints, downsize, shape):
         self.rect = opencv_rect
@@ -32,6 +35,7 @@ class DlibFace(object):
         self.downsize = downsize
         self.upsize = 1.0 / self.downsize
         self.original_shape = shape  # size of original image
+        self.centroid = compute_centroid(self.keypoints)
 
     def mark_image(self, img):
         (x, y, w, h) = self.bb

@@ -247,6 +247,24 @@ You might notice that many of your photomosaics will have large regions of simil
 
 At each tile, with `--best-k`, `k` top matches will be chosen from randomly, weighted roughly inversely by distance (so "closer" images are more likely). 
 
+Here's the same image as above, but with `--best-k 5`:
+
+<p align="center">
+    <img src="media/readme/best-k.jpg" height="400">
+</p>
+
+```bash
+$ python mosaic.py \
+    --target "media/example/beach.jpg" \
+    --savepath "media/output/%s-mosaic-scale-%d.jpg" \
+    --codebook-dir media/pics/ \
+    --scale 13 \
+    --height-aspect 4 \
+    --width-aspect 3 \
+    --opacity 0.4 \
+    --best-k 5
+```
+
 ### Using `ffprobe` / `ffmpeg`
 
 A few of the routines in this project make use of parameters from the video/audio files. I often call the command line utilities directly by spinning up a separate process, which is a little icky, but gets the job done.
