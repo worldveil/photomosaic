@@ -6,6 +6,14 @@ Creating photomosaic images & videos.
     <img src="media/readme/side-by-side.jpg">
 </p>
 
+If you're looking to print a poster, you can use more advanced settings like `--best-k` to choose instead from the closest k-neighbors, `--opacity` to make use of the original photo, and `--randomness` to include random photos from your collection:
+
+<p align="center">
+    <img src="media/readme/header.jpg">
+</p>
+
+Other features, such as including only photos with faces in them, creating GIFs of face montages, and facial recognition are under development. 
+
 ## How does it work?
 
 We're doing the digital equivilent of a very old technique - creating mosaics:

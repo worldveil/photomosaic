@@ -20,6 +20,7 @@ def mosaicify(
         best_k=1,
         trim=True,
         uniform_k=True,
+        no_duplicates=True,
     ):
     try:
         rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
@@ -34,6 +35,7 @@ def mosaicify(
         if verbose:
             print("We have %d tiles to assign" % len(rect_starts))
 
+        seen_idx = { -1 }
         for (j, (x, y)) in enumerate(rect_starts):
             starttime = time.time()
             
@@ -64,7 +66,18 @@ def mosaicify(
             # write into mosaic
             if random.random() < randomness:
                 # pick a random tile!
-                mosaic[x : x + tile_h, y : y + tile_w] = random.choice(tile_images)
+                num_images = len(tile_images)
+                rand_idx = random.choice(range(num_images))
+                if rand_idx in seen_idx:
+                    remaining_idx = set(range(num_images)) - seen_idx
+                    try:
+                        rand_idx = random.choice(list(remaining_idx))
+                    except IndexError:
+                        # just pick one anyway
+                        rand_idx = random.choice(range(num_images))
+
+                seen_idx.add(rand_idx)
+                mosaic[x : x + tile_h, y : y + tile_w] = tile_images[rand_idx]
             else:
                 if use_stabilization:
                     if dist < last_dist[x, y] * stabilization_threshold:
