@@ -12,11 +12,13 @@ If you're looking to print a poster, you can use more advanced settings like `--
     <img src="media/readme/header.jpg">
 </p>
 
-Because I tend to get carried away with things, this library can also make facial montages:
+Because I tend to get carried away with things (unrelated to photomosaics), this library can also make facial montages aligned on a particular person's face:
 
 <p align="center">
     <img src="media/readme/face_montage.gif">
 </p>
+
+This makes use of an embedding network and a simple linear classifer on top, and then creates a warp matrix for each image to align the eyes and scale it appropriately. 
 
 ## How does it work?
 
