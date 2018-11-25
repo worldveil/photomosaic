@@ -287,7 +287,7 @@ The way it works:
 1. Put together a folder of photos with ANYONE ELSE's face in them (`--other-face-dir`). The more the better. Just don't have your face in them. If you're really short on them / have a lot of group photos, crop yourself out. 
 1. Put together a directory of photos you'd like to draw from to make the montage (`--photos-dir`). 
 
-I have included an academic dataset (the Caltech Faces Dataset) of 450 faces in the `media/faces/other_faces` that are unlikely to be you as a starting point. 
+I have included an academic dataset (the [Caltech Faces Dataset](http://www.vision.caltech.edu/html-files/archive.html)) of 450 faces in the `media/faces/other_faces` that are unlikely to be you as a starting point. If you make use of this for some academic reason, please do cite both them and `dlib`. 
 
 If you want good accuracy, I'd try to add at least 100 yourself to both the `--target-face-dir` and the `--other-face-dir`. I added about that and as a result the `face_montage.py` script had about 1 false positive per 300 photos (easily removed before running the `create_gif_from_photos_folder.py` step).
 
@@ -298,7 +298,7 @@ Anyway, enough description. To run the facial embeddings, train the linear class
 ```bash
 $ python face_montage.py \
         --target-face-dir media/faces/will \
-        --other-face-dir media/faces/other \
+        --other-face-dir media/faces/other_faces \
         --photos-dir media/pics \
         --output-size 800 \
         --savedir media/output/montage_will/ \
