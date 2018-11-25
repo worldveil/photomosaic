@@ -34,6 +34,14 @@ Take a target image, say, a family photo. You can recreate that target image as 
 
 This project cuts up the target image into tiles (you control the tile size with `scale` parameter), and for each tile patch, uses the L2 similarity metric (with an ultrafast lookup using Facebook's [faiss](https://github.com/facebookresearch/faiss) library) to find the closest codebook tile image to replace it with.
 
+The lookup is quite fast:
+
+<p align="center">
+   <img src="media/readme/lookup_speed.png" height="200">
+</p>
+
+You can run a battery of fun performance metrics with `performance.py` if you're really curious. 
+
 You can even do this for each frame in a video and create videomosaics (see `video.py`). 
 
 ## Setup
