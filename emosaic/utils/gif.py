@@ -3,7 +3,7 @@ import moviepy.editor as mpy
 
 def create_gif_from_images(image_paths, savepath, fps=3, fuzz=5, ascending=None, compress=True, resize_height=None):
     if ascending is True:
-        image_paths.sort(reverse=True)
+        image_paths.sort(reverse=False)
     elif ascending is False:
         image_paths.sort()
 

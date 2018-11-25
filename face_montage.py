@@ -32,26 +32,28 @@ face_detector = dlib.get_frontal_face_detector()
 keypoint_finder = dlib.shape_predictor(faces.WEIGHTS_2_PATH['landmarks_5'])
 face_embedder = dlib.face_recognition_model_v1(faces.WEIGHTS_2_PATH['face_recognition'])
 
-parser = argparse.ArgumentParser()
+p = argparse.ArgumentParser()
 
 # required
-parser.add_argument("--target-face-dir", dest='target_face_dir', type=str, required=True, help="We'll train a model on the single face in photos in this directory")
-parser.add_argument("--other-face-dir", dest='other_face_dir', type=str, required=True, help="Directory of negative examples of other faces")
-parser.add_argument("--photos-dir", dest='photos_dir', type=str, required=True, help="Directory of photos to use in the actual montage")
-parser.add_argument("--output-size", dest='output_size', type=int, required=True, help="Dimensions of the square images to output")
-parser.add_argument("--savedir", dest='savedir', type=str, required=True, help="Directory where to save the face-aligned images")
+p.add_argument("--target-face-dir", dest='target_face_dir', type=str, required=True, help="We'll train a model on the single face in photos in this directory")
+p.add_argument("--other-face-dir", dest='other_face_dir', type=str, required=True, help="Directory of negative examples of other faces")
+p.add_argument("--photos-dir", dest='photos_dir', type=str, required=True, help="Directory of photos to use in the actual montage")
+p.add_argument("--output-size", dest='output_size', type=int, required=True, help="Dimensions of the square images to output")
+p.add_argument("--savedir", dest='savedir', type=str, required=True, help="Directory where to save the face-aligned images")
+
+p.add_argument("--start-closeness", dest='start_closeness', type=float, default=0.4, help="Starting closenness (in range 0.2 - 0.49)")
+p.add_argument("--end-closeness", dest='end_closeness', type=float, default=0.49, help="Ending closeness (in range 0.2 - 0.49)")
 
 # optional
-parser.add_argument("--sort-by-photo-age", dest='sort_by_photo_age', action='store_true', default=False, help="Should we sort by photo age? Otherwise random order.")
+p.add_argument("--sort-by-photo-age", dest='sort_by_photo_age', action='store_true', default=False, help="Should we sort by photo age? Otherwise random order.")
 
-args = parser.parse_args()
+args = p.parse_args()
 
 # some settings
 downsize = 0.25
 face_detect_upsample_multiple = 2
 num_embedding_jitters = 5
 interactive = False  # show matches as they come up?
-desired_eye_perc = 0.45
 
 # get positive examples
 print("Embedding target faces from (%s) so we can train a model that can find this face..." % args.target_face_dir)
@@ -177,9 +179,18 @@ with open('cache/matches.pkl', 'wb') as pf:
 # first load each image and align
 aligned_images = []
 
+def get_taken_at_sort_key(m):
+    try:
+        taken_at = m[1].taken_at
+        if not taken_at:
+            return datetime.now()
+        return taken_at
+    except Exception:
+        return datetime.now()
+
 if args.sort_by_photo_age:
     print("Sorting montage matches by photo taken date...")
-    matches.sort(key=lambda m: m[1].taken_at or datetime.now())
+    matches.sort(key=get_taken_at_sort_key)
 
 saved = 0
 try:
@@ -188,12 +199,13 @@ try:
 except OSError:
     pass
 
+closenesses = np.linspace(args.start_closeness, args.end_closeness, len(matches))
 for j, (img, image, path, rect, keypoints) in enumerate(matches):
     try:
         savepath = os.path.join(args.savedir, '%08d.jpg' % j)
         aligned = faces.generate_aligned_face(
             img, rect, keypoints,
-            desired_left_eye_percs=(desired_eye_perc, desired_eye_perc), 
+            desired_left_eye_percs=(closenesses[j], closenesses[j]), 
             desired_face_size=args.output_size,
         )
         aligned_images.append(aligned)
