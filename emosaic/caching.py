@@ -5,6 +5,72 @@ import cPickle as pickle
 DEFAULT_CACHE_DIR = 'cache'
 DEFAULT_CACHE_PATTERN = '*.pkl'
 
+class EmbeddingsCacheConfig(object):
+    def __init__(self, 
+            paths, 
+            downsize, 
+            face_detect_upsample_multiple, 
+            num_embedding_jitters, 
+            allow_single_face_per_photo,
+            cache_dir=DEFAULT_CACHE_DIR,
+            cache_pattern=DEFAULT_CACHE_PATTERN):
+
+        self.paths = paths
+        self.downsize = downsize
+        self.face_detect_upsample_multiple = face_detect_upsample_multiple
+        self.num_embedding_jitters = num_embedding_jitters
+        self.allow_single_face_per_photo = allow_single_face_per_photo
+
+        self.paths.sort()
+
+        self.cache_dir = cache_dir
+        self.cache_pattern = cache_pattern
+
+    def _hash(self):
+        paths_tuple = tuple(self.paths)
+        hash_tuple = (
+            paths_tuple,
+            self.downsize, self.face_detect_upsample_multiple, self.num_embedding_jitters,
+            self.allow_single_face_per_photo
+        )
+        return str(hash(hash_tuple))
+
+    def list_cache_files(self):
+        return glob.glob(os.path.join(self.cache_dir, self.cache_pattern))
+
+    def load(self):
+        hsh = self._hash()
+        cache_files = self.list_cache_files()
+        for cf in cache_files:
+            cache_hsh = os.path.basename(cf).replace('.pkl', '')
+            if hsh == cache_hsh:
+                with open(cf, 'rb') as f:
+                    data = pickle.load(f)
+                return data
+        return None
+
+    def save(self, embedding_vectors):
+        hsh = self._hash()
+        savepath = os.path.join(self.cache_dir, '%s.pkl' % hsh)
+
+        try:
+            with open(savepath, 'wb') as f:
+                data = dict(
+                    embedding_vectors=embedding_vectors,
+                    paths=self.paths,
+                    downsize=self.downsize, 
+                    face_detect_upsample_multiple=self.face_detect_upsample_multiple, 
+                    num_embedding_jitters=self.num_embedding_jitters, 
+                    allow_single_face_per_photo=self.allow_single_face_per_photo,
+                )
+                pickle.dump(data, f, protocol=2)
+            return True
+        except Exception:
+            print("Failed to cache index!")
+            return False
+
+
+
 class MosaicCacheConfig(object):
     """
     # loading

@@ -1,5 +1,6 @@
 import glob
 import time
+import os
 import random
 import traceback
 from datetime import datetime
@@ -45,6 +46,12 @@ class Image(object):
                 self.taken_at, self.taken_at_unix = None, None
                 if taken_at_string is not None:
                     self.taken_at = datetime.strptime(taken_at_string, "%Y:%m:%d %H:%M:%S")
+                    self.taken_at_unix = int(time.mktime(self.taken_at.timetuple()))
+                else:
+                    # try using the photo name - iPhones name the photo with date taken
+                    # ex: '/path/to/2015-11-26 18.57.45.jpg'
+                    basename = os.path.basename(self.path).replace('.jpg', '').strip()
+                    self.taken_at = datetime.strptime(basename, "%Y-%m-%d %H.%M.%S")
                     self.taken_at_unix = int(time.mktime(self.taken_at.timetuple()))
 
                 # get latitude/longitude
