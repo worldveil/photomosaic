@@ -281,7 +281,9 @@ $ python mosaic.py \
 
 ### Face Montages
 
-I really wanted to make face montages, so even though they don't have anything to do with photomosiacs, here they are!
+I really wanted to make face montages, so even though they don't have anything to do with photomosiacs, here they are! 
+
+Basically this means a GIF of a single person from different photos but all aligned on that person's face.
 
 The way it works:
 
@@ -289,11 +291,11 @@ The way it works:
 1. Put together a folder of photos with ANYONE ELSE's face in them (`--other-face-dir`). The more the better. Just don't have your face in them. If you're really short on them / have a lot of group photos, crop yourself out. 
 1. Put together a directory of photos you'd like to draw from to make the montage (`--photos-dir`). 
 
-I have included an academic dataset (the [Caltech Faces Dataset](http://www.vision.caltech.edu/html-files/archive.html)) of 450 faces in the `media/faces/other_faces` that are unlikely to be you as a starting point. If you make use of this for some academic reason, please do cite both them and `dlib`. 
+I have included an academic dataset (the [Caltech Faces Dataset](http://www.vision.caltech.edu/html-files/archive.html)) of 450 faces in the `media/faces/other_faces` (that are unlikely to be you) as a starting point. If you make use of this for some academic reason, please do cite both them and `dlib`. 
 
-If you want good accuracy, I'd try to add at least 100 yourself to both the `--target-face-dir` and the `--other-face-dir`. I added about that and as a result the `face_montage.py` script had about 1 false positive per 300 photos (easily removed before running the `create_gif_from_photos_folder.py` step).
+If you want good accuracy, I'd try to add at least 100 photos to both the `--target-face-dir` and the `--other-face-dir`. I added about that and as a result the `face_montage.py` script had about 1 false positive per 300 photos (easily removed before running the `create_gif_from_photos_folder.py` step).
 
-Here's [a place to find many, many more pictures with faces that are not likely to be yours](https://www.kairos.com/blog/60-facial-recognition-databases). 
+Here's [a place to find many, many more pictures with random faces](https://www.kairos.com/blog/60-facial-recognition-databases). 
 
 Anyway, enough description. To run the facial embeddings, train the linear classifier, and align the faces:
 
