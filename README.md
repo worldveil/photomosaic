@@ -37,7 +37,7 @@ This project cuts up the target image into tiles (you control the tile size with
 The lookup is quite fast:
 
 <p align="center">
-   <img src="media/readme/lookup_speed.png" height="200">
+   <img src="media/readme/lookup_speed.png" height="400">
 </p>
 
 You can run a battery of fun performance metrics with `performance.py` if you're really curious. 
