@@ -12,13 +12,13 @@ If you're looking to print a poster, you can use more advanced settings like `--
     <img src="media/readme/header.jpg">
 </p>
 
-Because I tend to get carried away with things (unrelated to photomosaics), this library can also make facial montages aligned on a particular person's face:
+Because I tend to get carried away with things, this library can also (unrelated to photomosaics, but related to doing cool things with your photo collection) make facial montages aligned on a particular person's face:
 
 <p align="center">
     <img src="media/readme/face_montage.gif">
 </p>
 
-This makes use of an embedding network and a simple linear classifer on top, and then creates a warp matrix for each image to align the eyes and scale it appropriately. 
+This makes use of an embedding network, a simple linear classifer on top, and a warp matrix for each image to align the eyes and scale it appropriately. 
 
 ## How does it work?
 
@@ -350,20 +350,6 @@ $ convert -delay 5 -layers optimize *.jpg output.gif
 ```
 
 then you may want to apply the gifsicle trick for compressing/resizing that GIF to make it be a reasonable size. 
-
-### Emojis
-
-This project first started as a way to make photomosaics from emojis. That didn't turn out to be that aesthetically pleasing, but here's a few notes on it.
-
-#### Downloading Emojis
-
-Run the scraping script. Make sure you have `bs4` and `requests` Python packages installed. 
-
-```bash
-$ python scripts/scrape_popular_emojis.py
-```
-
-To get the set of all (not just popular) emojis, download the 128 x 128 set from [here](https://emojipedia.org/emojione/3.1/).
 
 ### Unit tests
 
