@@ -12,7 +12,11 @@ If you're looking to print a poster, you can use more advanced settings like `--
     <img src="media/readme/header.jpg">
 </p>
 
-Other features, such as including only photos with faces in them, creating GIFs of face montages, and facial recognition are under development. 
+Because I tend to get carried away with things, this library can also make facial montages:
+
+<p align="center">
+    <img src="media/readme/face_montage.gif">
+</p>
 
 ## How does it work?
 
@@ -272,6 +276,47 @@ $ python mosaic.py \
     --opacity 0.4 \
     --best-k 5
 ```
+
+### Face Montages
+
+I really wanted to make face montages, so even though they don't have anything to do with photomosiacs, here they are!
+
+The way it works:
+
+1. Put together a folder of photos (`--target-face-dir`) with ONLY the face you want in the montage (yourself, for example). Selfies are great for this. 
+1. Put together a folder of photos with ANYONE ELSE's face in them (`--other-face-dir`). The more the better. Just don't have your face in them. If you're really short on them / have a lot of group photos, crop yourself out. 
+1. Put together a directory of photos you'd like to draw from to make the montage (`--photos-dir`). 
+
+I have included an academic dataset (the Caltech Faces Dataset) of 450 faces in the `media/faces/other_faces` that are unlikely to be you as a starting point. 
+
+If you want good accuracy, I'd try to add at least 100 yourself to both the `--target-face-dir` and the `--other-face-dir`. I added about that and as a result the `face_montage.py` script had about 1 false positive per 300 photos (easily removed before running the `create_gif_from_photos_folder.py` step).
+
+Here's [a place to find many, many more pictures with faces that are not likely to be yours](https://www.kairos.com/blog/60-facial-recognition-databases). 
+
+Anyway, enough description. To run the facial embeddings, train the linear classifier, and align the faces:
+
+```bash
+$ python face_montage.py \
+        --target-face-dir media/faces/will \
+        --other-face-dir media/faces/other \
+        --photos-dir media/pics \
+        --output-size 800 \
+        --savedir media/output/montage_will/ \
+        --sort-by-photo-age
+```
+
+then to actually compile them into a GIF, use the `--savedir` from above and then run:
+
+
+```bash
+$ python create_gif_from_photos_folder.py \
+        --photos-dir media/output/montage_will/ \
+        --fps 7 \
+        --fuzz 3 \
+        --order ascending
+```
+
+It's nice to separate these two steps since you might want to remove false positives from the folder created in the first step, remove unflattering pics, or mess around with how many frames per second you'd like in the resulting GIF. I implemented caching on the embedding, but running over a full set of photos (4,000+ for just the segment of my photos library I had the patience to run over) still can take some time.
 
 ### Using `ffprobe` / `ffmpeg`
 
