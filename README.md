@@ -1,6 +1,6 @@
 # photomosaic
 
-Creating photomosaic images & videos. 
+Creating fun photomosaics, GIFs, and murals from your family pictures using ML & similarity search.
 
 <p align="center">
     <img src="media/readme/side-by-side.jpg">
