@@ -6,7 +6,9 @@ Creating photomosaic images & videos.
     <img src="media/readme/side-by-side.jpg">
 </p>
 
-If you're looking to print a poster, you can use more advanced settings like `--best-k` to choose instead from the closest k-neighbors, `--opacity` to make use of the original photo, and `--randomness` to include random photos from your collection:
+If you're looking to print a poster, you can use more advanced settings described within / code around to make your own. 
+
+Alternatively if you'd like to use a cool web interface, upload your photos, and get them printed and mailed to you, try my service: [http://photofun.strikingly.com](http://photofun.strikingly.com). (we delete all the photos after.)
 
 <p align="center">
     <img src="media/readme/header.jpg">
