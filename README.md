@@ -6,21 +6,19 @@ Creating photomosaic images & videos.
     <img src="media/readme/side-by-side.jpg">
 </p>
 
-If you're looking to print a poster, you can use more advanced settings described within / code around to make your own. 
-
-Alternatively if you'd like to use a cool web interface, upload your photos, and get them printed and mailed to you, try my service: [http://photofun.strikingly.com](http://photofun.strikingly.com). (we delete all the photos after.)
+If you'd like to use a cool web interface, upload your photos, and get them printed and mailed to you, try my service: [http://photofun.strikingly.com](http://photofun.strikingly.com). (we delete all the photos after.)
 
 <p align="center">
     <img src="media/readme/header.jpg">
 </p>
 
-Because I tend to get carried away with things, this library can also (unrelated to photomosaics, but related to doing cool things with your photo collection) make facial montages aligned on a particular person's face:
+Because I tend to get carried away with things, you can also (unrelated to photomosaics, but related to doing cool things with your photo collection) make facial montages aligned on a particular person's face:
 
 <p align="center">
     <img src="media/readme/face_montage.gif">
 </p>
 
-This makes use of an embedding network, a simple linear classifer on top, and a warp matrix for each image to align the eyes and scale it appropriately. 
+This makes use of an embedding network, a simple linear classifer on top, and a warp matrix for each image to align the eyes and scale it appropriately. You just need to make a folder with a few examples so it can learn which face to include.
 
 ## How does it work?
 
