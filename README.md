@@ -263,7 +263,7 @@ $ python mosaic.py \
 
 ### 4) Best-K (`--best-k`)
 
-You might notice that many of your photomosaics will have large regions of similar color and so a single image gets tiled over large portions of your image. If you'd like to throw in a little (sensible) randomness, instead of using the (`--randomness`) sludgehammer, you can use the `--best-k`. 
+You might notice that many of your photomosaics will have large regions of similar color and so a single image gets tiled over large portions of your image. If you'd like to throw in a little (sensible) randomness, instead of using the (`--randomness`) sledgehammer, you can use the `--best-k`. 
 
 At each tile, with `--best-k`, `k` top matches will be chosen from randomly, weighted roughly inversely by distance (so "closer" images are more likely). 
 
