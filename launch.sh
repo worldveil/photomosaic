@@ -12,7 +12,7 @@ docker run \
 	--rm \
 	--name $CONTAINER_NAME \
 	--mount type=bind,source="$(pwd)",target=/project \
-	--mount type=bind,source="/Users/will/Dropbox/Camera Uploads/",target=/pics \
+	--mount type=bind,source="$HOME/Dropbox/Camera Uploads/",target=/pics \
 	-p "$PORT:$PORT/tcp" \
 	-e "DISPLAY=$IP:0" \
 	mosaic-conda:latest \
