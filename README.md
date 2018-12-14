@@ -18,11 +18,11 @@ Because I tend to get carried away with things, you can also (unrelated to photo
     <img src="media/readme/face_montage.gif">
 </p>
 
-This makes use of an embedding network, a simple linear classifer on top, and a warp matrix for each image to align the eyes and scale it appropriately. You just need to make a folder with a few examples so it can learn which face to include.
+This makes use of an embedding network, a simple linear classifier on top, and a warp matrix for each image to align the eyes and scale it appropriately. You just need to make a folder with a few examples so it can learn which face to include.
 
 ## How does it work?
 
-We're doing the digital equivilent of a very old technique - creating mosaics:
+We're doing the digital equivalent of a very old technique - creating mosaics:
 
 <p align="center">
    <img src="media/readme/fish.jpg" height="200">
@@ -240,7 +240,7 @@ Videomosaics are just a repeated application per frame of the photomosaic functi
 
     `current closest tile's distance` < `--stabilization-threshold` * `last frame's distance`
 
-Otherwise, we simply keep the tile the same for that frame. This is a crude stabilitiy heuristic, and in the future I could certainly do something smarter. 
+Otherwise, we simply keep the tile the same for that frame. This is a crude stability heuristic, and in the future I could certainly do something smarter. 
 
 ### 3) Opacity (`--opacity`)
 
@@ -287,7 +287,7 @@ $ python mosaic.py \
 
 ### Face Montages
 
-I really wanted to make face montages, so even though they don't have anything to do with photomosiacs, here they are! 
+I really wanted to make face montages, so even though they don't have anything to do with photomosaics, here they are! 
 
 Basically this means a GIF of a single person from different photos but all aligned on that person's face.
 
@@ -353,7 +353,7 @@ then you may want to apply the gifsicle trick for compressing/resizing that GIF 
 
 ### Unit tests
 
-There is a small (but embarassingly incomplete) test suite that you can run with:
+There is a small (but embarrassingly incomplete) test suite that you can run with:
 
 ```bash
 sh test.sh
