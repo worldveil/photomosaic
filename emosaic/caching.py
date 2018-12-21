@@ -1,6 +1,11 @@
 import os
 import glob
-import cPickle as pickle
+import six
+
+if six.PY2:
+	import cPickle as pickle
+else:
+	import pickle
 
 DEFAULT_CACHE_DIR = 'cache'
 DEFAULT_CACHE_PATTERN = '*.pkl'
