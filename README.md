@@ -6,7 +6,7 @@ Creating fun photomosaics, GIFs, and murals from your family pictures using ML &
     <img src="media/readme/side-by-side.jpg">
 </p>
 
-If you'd like to use a cool web interface, upload your photos, and get them printed and mailed to you, try my service: [http://photofun.strikingly.com](http://photofun.strikingly.com). (we delete all the photos after.)
+Or, mix with opacity:
 
 <p align="center">
     <img src="media/readme/header.jpg">
