@@ -99,7 +99,7 @@ def index_images(
         # create our pool and go!
         starttime = time.time()
 
-        if isinstance(paths, basestring):
+        if isinstance(paths, str):
             # paths is a glob pattern like: 'images/blah/*.jpg'
             paths = glob.glob(paths)
 
