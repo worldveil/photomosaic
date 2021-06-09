@@ -13,4 +13,5 @@ scikit-image==0.14.0
 moviepy==0.2.3.5
 tqdm==4.26.0
 dlib
-imutils
+imutils==0.5.3
+imageio<2.7
